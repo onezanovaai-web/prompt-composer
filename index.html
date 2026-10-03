@@ -8,8 +8,7 @@
 :root{
   --bg:#eef1f4; --panel:#ffffff; --ink:#1d2530; --mute:#5d6b7a; --line:#d5dbe2;
   --accent:#0f6e8c; --accent-ink:#ffffff; --lib:#1f7a4d; --lib-bg:#e3f3ea;
-  --mt:#9a5b00; --mt-bg:#fbefd9; --danger:#b3261e;
-  --r:10px;
+  --mt:#9a5b00; --mt-bg:#fbefd9; --danger:#b3261e; --hl:#e8a317; --r:10px;
 }
 @media (prefers-color-scheme:dark){
   :root{--bg:#12171d; --panel:#1b222a; --ink:#e6ebf0; --mute:#93a1b0; --line:#2c3743;
@@ -17,33 +16,37 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font:16px/1.5 "Noto Sans Thai","Sarabun",system-ui,-apple-system,"Segoe UI",sans-serif;
-  padding:env(safe-area-inset-top) 0 calc(env(safe-area-inset-bottom) + 24px)}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 "Noto Sans Thai","Sarabun",system-ui,-apple-system,"Segoe UI",sans-serif;
+  padding:env(safe-area-inset-top) 0 calc(env(safe-area-inset-bottom) + 140px)}
 .wrap{max-width:760px;margin:0 auto;padding:12px}
 h1{font-size:1.15rem;margin:8px 0 2px}
+h2{font-size:1rem;margin:0 0 6px}
 .sub{color:var(--mute);font-size:.88rem;margin:0 0 12px}
-nav{display:flex;gap:6px;margin-bottom:12px;position:sticky;top:0;background:var(--bg);padding:6px 0;z-index:5}
+nav{display:flex;gap:6px;margin-bottom:12px;position:sticky;top:env(safe-area-inset-top);background:var(--bg);padding:6px 0;z-index:5}
 nav button{flex:1;padding:10px 6px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:var(--r);font:inherit;font-weight:600}
 nav button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 section{display:none}
 section.on{display:block}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px;margin-bottom:12px}
-label{display:block;font-size:.85rem;color:var(--mute);margin:8px 0 4px}
+label{display:block;font-size:.85rem;color:var(--mute);margin:10px 0 4px}
 input,textarea,select{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
-textarea{min-height:48px;resize:vertical}
+textarea{min-height:56px;resize:vertical}
+#req{min-height:96px}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .row>*{flex:0 0 auto}
 .row>.grow{flex:1 1 140px}
 button.btn{padding:10px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:600}
+button.btn.big{width:100%;padding:14px;font-size:1.05rem}
 button.btn.ghost{background:transparent;color:var(--accent)}
 button.btn.warn{background:transparent;color:var(--danger);border-color:var(--danger)}
 button.btn:disabled{opacity:.5}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.chip{padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:.92rem}
+.chip{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:.92rem}
 .chip.sel{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .chip.lib{background:var(--lib-bg);color:var(--lib);border-color:var(--lib)}
 .chip.mt{background:var(--mt-bg);color:var(--mt);border-color:var(--mt)}
+.chip.mine{border-style:dashed}
 .status{font-size:.85rem;color:var(--mute);margin-top:6px;min-height:1.2em}
 .out{white-space:pre-wrap;word-break:break-word;background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:10px;font:14px/1.5 ui-monospace,Menlo,Consolas,monospace;min-height:56px}
 .shot-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
@@ -55,118 +58,269 @@ button.btn:disabled{opacity:.5}
 .lib-item button{padding:6px 10px;font-size:.85rem}
 .cat-h{font-size:.9rem;font-weight:700;margin:14px 0 2px}
 .hint{font-size:.82rem;color:var(--mute)}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 18px);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:999px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s}
+details summary{cursor:pointer;color:var(--accent);font-weight:600;padding:6px 0}
+ol.steps{padding-left:1.2em;margin:6px 0}
+ol.steps li{margin:6px 0}
+.ex{border:1px solid var(--line);border-radius:8px;padding:10px;margin-top:10px}
+.ex .th{font-weight:600}
+.ex .en{font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;color:var(--mute);margin-top:6px;word-break:break-word}
+.banner{border-color:var(--accent)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 18px);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:999px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s;z-index:30}
 .toast.show{opacity:1}
+.hl{outline:3px solid var(--hl)!important;outline-offset:3px;border-radius:8px;position:relative;z-index:12}
+#coach{position:fixed;left:8px;right:8px;bottom:calc(env(safe-area-inset-bottom) + 8px);max-width:740px;margin:0 auto;background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;z-index:20;box-shadow:0 6px 24px rgba(0,0,0,.35)}
+#coach .row{margin-top:8px;justify-content:flex-end}
+#coach button{padding:8px 14px;border-radius:8px;border:1px solid var(--bg);background:transparent;color:var(--bg);font:inherit;font-weight:600}
+#coach button.p{background:var(--hl);border-color:var(--hl);color:#1d2530}
 @media (prefers-reduced-motion:reduce){.toast{transition:none}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Prompt Composer TH→EN</h1>
-  <p class="sub">พิมพ์ไทย → ใช้คำจากคลังก่อน → ที่เหลือแปลอัตโนมัติ → ได้ prompt บรรทัดเดียว</p>
+  <p class="sub">พิมพ์ไทย หรือเลือกเทมเพลต → กดปุ่มเดียว → ได้ prompt ภาษาอังกฤษบรรทัดเดียว</p>
 
   <nav role="tablist">
-    <button role="tab" data-tab="compose" aria-selected="true">ประกอบ</button>
-    <button role="tab" data-tab="add" aria-selected="false">เพิ่มคำ</button>
-    <button role="tab" data-tab="lib" aria-selected="false">คลัง</button>
+    <button role="tab" data-tab="home" aria-selected="true">หน้าแรก</button>
+    <button role="tab" data-tab="guide" aria-selected="false">วิธีใช้</button>
+    <button role="tab" data-tab="set" aria-selected="false">ตั้งค่า 🔒</button>
   </nav>
 
-  <!-- COMPOSE -->
-  <section id="compose" class="on">
-    <div class="card">
-      <label for="prefix">ส่วนหัวคงที่ (ใส่ทุกช็อต)</label>
-      <input id="prefix" autocomplete="off">
-      <label for="suffix">ส่วนท้ายคงที่ เช่น กล้อง/ฟิล์มประจำซีรีส์</label>
-      <input id="suffix" autocomplete="off">
+  <!-- HOME -->
+  <section id="home" class="on">
+    <div class="card banner" id="firstBanner" hidden>
+      <b>ใช้ครั้งแรกใช่ไหม?</b>
+      <p class="hint" style="margin:4px 0 8px">ให้ระบบสอนกดจริงทีละขั้น ใช้เวลาไม่ถึงนาที</p>
+      <div class="row"><button class="btn" id="bannerGo">เริ่มสอน</button><button class="btn ghost" id="bannerNo">ไม่ต้อง</button></div>
     </div>
+
     <div class="card">
+      <h2>ขั้น 1 · เลือกแบบสำเร็จรูป (ข้ามได้)</h2>
+      <div class="chips" id="tplBox"></div>
+      <p class="hint" style="margin-top:8px">ปุ่มขอบประ ⭐ คือแบบที่คุณเก็บไว้เอง</p>
+    </div>
+
+    <div class="card">
+      <h2>ขั้น 2 · บอกสิ่งที่อยากได้</h2>
       <div class="shot-tabs" id="shotTabs"></div>
-      <div id="slots"></div>
-      <p class="hint">คั่นคำด้วย , หรือขึ้นบรรทัดใหม่ เช่น ผมยาว, ยิ้มมองกล้อง</p>
+      <div class="row">
+        <button class="chip" id="modeSingle">คนเดียว</button>
+        <button class="chip" id="modeMulti">หลายคน</button>
+      </div>
+
+      <div id="multiBox" hidden>
+        <label for="fA">คนที่ 1 (ผม ชุด ท่า)</label>
+        <textarea id="fA" placeholder="เช่น ผมยาว, ผ้าซาติน, นั่งเอนตัว"></textarea>
+        <label for="fB">คนที่ 2 (ผม ชุด ท่า)</label>
+        <textarea id="fB" placeholder="เช่น ผมสั้น, เสื้อเชิ้ตโอเวอร์ไซส์"></textarea>
+        <label for="fI">ทั้งคู่ทำอะไรกัน (ใครสัมผัส/อิงใคร)</label>
+        <textarea id="fI" placeholder="เช่น ซบไหล่, จับมือ"></textarea>
+        <label for="fL">ใครอยู่ตรงไหนในเฟรม</label>
+        <textarea id="fL" placeholder="เช่น ซ้ายขวา, เฟรมกว้างเห็นทั้งคู่"></textarea>
+      </div>
+
+      <label for="req" id="reqLbl">พิมพ์ภาษาไทยได้เลย คั่นแต่ละอย่างด้วยเครื่องหมาย ,</label>
+      <textarea id="req" placeholder="เช่น เซ็กซี่ละมุน, นั่งเอนตัว, ห้องนอน, แสงหน้าต่าง, สามส่วนสี่"></textarea>
+
+      <details id="detailBox">
+        <summary>ปรับละเอียดทีละหมวด (ไม่บังคับ)</summary>
+        <div id="slots"></div>
+      </details>
+
+      <h2 style="margin-top:14px">ขั้น 3 · สร้าง</h2>
+      <button class="btn big" id="goBtn">สร้าง prompt</button>
       <div class="row" style="margin-top:8px">
-        <button class="btn" id="goBtn">แปล + ประกอบ</button>
         <button class="btn ghost" id="addShot">+ ช็อต</button>
         <button class="btn warn" id="delShot">ลบช็อตนี้</button>
+        <button class="btn ghost" id="clearShot">ล้างช่อง</button>
       </div>
       <div class="status" id="composeStatus"></div>
     </div>
+
     <div class="card" id="resultCard" hidden>
-      <div class="row"><b class="grow">ผลลัพธ์</b><button class="btn" id="copyBtn">คัดลอกทั้งหมด</button></div>
+      <div class="row"><b class="grow">ขั้น 4 · ผลลัพธ์</b><button class="btn" id="copyBtn">คัดลอกทั้งหมด</button></div>
       <div class="out" id="out" style="margin-top:8px"></div>
-      <p class="hint" style="margin-top:10px">เขียว = มาจากคลัง · เหลือง = แปลโดยเครื่อง (กดเพื่อเก็บเข้าคลัง)</p>
+      <p class="hint" style="margin-top:10px">เขียว = มาจากคลัง · เหลือง = เครื่องแปลเอง (ตรวจแล้วกดเก็บเข้าคลังได้)</p>
       <div class="chips" id="chunkChips"></div>
+      <div class="row" style="margin-top:10px"><button class="btn ghost" id="saveTpl">⭐ เก็บชุดนี้เป็นแบบของฉัน</button></div>
     </div>
   </section>
 
-  <!-- ADD -->
-  <section id="add">
+  <!-- GUIDE -->
+  <section id="guide">
     <div class="card">
-      <label for="thIn">คำไทย</label>
-      <div class="row">
-        <input id="thIn" class="grow" autocomplete="off" placeholder="พิมพ์คำหรือวลีภาษาไทย">
-        <button class="btn" id="searchBtn">หาคำอังกฤษ</button>
-      </div>
-      <div class="status" id="addStatus"></div>
-      <div class="chips" id="cands"></div>
-      <label for="enIn">คำอังกฤษที่จะเก็บ (กดตัวเลือกด้านบน หรือพิมพ์/แก้เองได้)</label>
-      <input id="enIn" autocomplete="off">
-      <label for="catIn">หมวด</label>
-      <select id="catIn"></select>
-      <div class="row" style="margin-top:12px">
-        <button class="btn" id="saveBtn">เก็บเข้าคลัง</button>
-        <button class="btn ghost" id="clearBtn">ล้างช่อง</button>
-      </div>
+      <h2>สอนกดจริง</h2>
+      <p class="hint" style="margin:0 0 8px">ระบบจะไฮไลต์ปุ่มให้กดทีละขั้นจนได้ prompt แรก</p>
+      <button class="btn big" id="tourBtn">▶ เริ่มสอน</button>
+    </div>
+    <div class="card">
+      <h2>4 ขั้นตอนสั้นๆ</h2>
+      <ol class="steps">
+        <li>หน้าแรก กดแบบสำเร็จรูป <b>หรือ</b> พิมพ์ไทยในช่องเอง</li>
+        <li>กด <b>สร้าง prompt</b></li>
+        <li>กด <b>คัดลอกทั้งหมด</b> แล้วเอาไปวางในเว็บเจนภาพ</li>
+        <li>ถ้ามีคำสีเหลือง ตรวจคำแปล แล้วกดเก็บเข้าคลัง ครั้งต่อไปจะได้คำแม่นขึ้น</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h2>ตัวอย่างการใช้ (กด “ลองเลย”)</h2>
+      <div id="examples"></div>
+    </div>
+    <div class="card">
+      <h2>โหมด “หลายคน” ต่างจากคนเดียวยังไง</h2>
+      <p class="hint" style="margin:0">ต้องบอกให้ชัดว่าแต่ละคนเป็นใคร ใส่อะไร ท่าไหน ทั้งคู่ทำอะไรกัน และใครอยู่ตรงไหนในเฟรม เขียนสั้นและตรงจะได้ผลดีกว่าเขียนยาว เพราะแขนขาที่ซ้อนกันเป็นจุดที่โมเดลภาพพลาดบ่อย</p>
+    </div>
+    <div class="card">
+      <h2>ข้อควรรู้</h2>
+      <p class="hint" style="margin:0">คำแปลอัตโนมัติอาจเพี้ยนกับศัพท์เฉพาะ จึงมีคลังคำให้เติมเอง ส่วนตั้งค่าล็อกไว้ด้วยรหัส (ตั้งต้น 1234) ข้อมูลทั้งหมดเก็บในเบราว์เซอร์เครื่องนี้</p>
     </div>
   </section>
 
-  <!-- LIBRARY -->
-  <section id="lib">
-    <div class="card">
-      <input id="libSearch" placeholder="ค้นหาในคลัง" autocomplete="off">
-      <div class="row" style="margin-top:8px">
-        <button class="btn ghost" id="exportBtn">ส่งออก JSON</button>
-        <button class="btn ghost" id="importBtn">นำเข้า JSON</button>
-        <input type="file" id="importFile" accept="application/json" hidden>
-      </div>
-      <div class="hint" style="margin-top:6px">ข้อมูลเก็บในเบราว์เซอร์เครื่องนี้เท่านั้น ส่งออกไว้สำรองหรือย้ายเครื่องได้</div>
+  <!-- SETTINGS -->
+  <section id="set">
+    <div class="card" id="lockBox">
+      <h2>ใส่รหัสเพื่อเข้าตั้งค่า</h2>
+      <input id="pinIn" type="password" inputmode="numeric" autocomplete="off" placeholder="รหัส">
+      <div class="row" style="margin-top:10px"><button class="btn" id="pinBtn">เข้าสู่ตั้งค่า</button></div>
+      <div class="status" id="pinStatus"></div>
     </div>
-    <div class="card" id="libList"></div>
+
+    <div id="setBody" hidden>
+      <div class="card">
+        <h2>ตัวละครประจำ / ส่วนคงที่</h2>
+        <label for="prefix">คนที่ 1 (ใส่ทุกช็อต)</label>
+        <input id="prefix" autocomplete="off">
+        <label for="prefixB">คนที่ 2 (ใช้ในโหมดหลายคน)</label>
+        <input id="prefixB" autocomplete="off">
+        <label for="suffix">ส่วนท้ายคงที่ เช่น กล้อง/ฟิล์มประจำซีรีส์</label>
+        <input id="suffix" autocomplete="off">
+      </div>
+
+      <div class="card">
+        <h2>เพิ่มคำเข้าคลัง</h2>
+        <label for="thIn">คำไทย</label>
+        <div class="row">
+          <input id="thIn" class="grow" autocomplete="off" placeholder="พิมพ์คำหรือวลีภาษาไทย">
+          <button class="btn" id="searchBtn">หาคำอังกฤษ</button>
+        </div>
+        <div class="status" id="addStatus"></div>
+        <div class="chips" id="cands"></div>
+        <label for="enIn">คำอังกฤษที่จะเก็บ (กดตัวเลือก หรือพิมพ์/แก้เอง)</label>
+        <input id="enIn" autocomplete="off">
+        <label for="catIn">หมวด</label>
+        <select id="catIn"></select>
+        <div class="row" style="margin-top:12px">
+          <button class="btn" id="saveBtn">เก็บเข้าคลัง</button>
+          <button class="btn ghost" id="clearBtn">ล้างช่อง</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>คลังคำของคุณ</h2>
+        <input id="libSearch" placeholder="ค้นหาในคลัง" autocomplete="off">
+        <div class="row" style="margin-top:8px">
+          <button class="btn ghost" id="exportBtn">ส่งออก JSON</button>
+          <button class="btn ghost" id="importBtn">นำเข้า JSON</button>
+          <input type="file" id="importFile" accept="application/json" hidden>
+        </div>
+        <div id="libList"></div>
+      </div>
+
+      <div class="card">
+        <h2>แบบของฉัน ⭐</h2>
+        <div id="myTpls"></div>
+      </div>
+
+      <div class="card">
+        <h2>เปลี่ยนรหัส</h2>
+        <input id="newPin" type="text" inputmode="numeric" autocomplete="off" placeholder="รหัสใหม่">
+        <div class="row" style="margin-top:8px"><button class="btn ghost" id="pinSave">บันทึกรหัส</button><button class="btn ghost" id="lockNow">ล็อกตอนนี้</button></div>
+      </div>
+    </div>
   </section>
+</div>
+
+<div id="coach" hidden>
+  <div id="coachTxt"></div>
+  <div class="row"><button id="coachSkip">ข้าม</button><button id="coachNext" class="p">ถัดไป</button></div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 (() => {
   const $ = s => document.querySelector(s);
-  const LS = 'promptComposer.v1';
+  const LS = 'promptComposer.v1';           // same key as v1: existing library is kept
   const CATS = ['ท่าทาง', 'ชุด', 'ฉาก', 'แสง', 'กล้อง', 'อื่นๆ'];
+  const CAT_OPTS = CATS.concat(['ปฏิสัมพันธ์', 'ผังเฟรม']);
+
   const DEFAULT = {
     prefix: '24-year-old Thai woman',
+    prefixB: 'a second person',
     suffix: '',
+    pin: '1234',
+    seenTour: false,
     lib: [
       { th: 'ผมยาว', en: 'long hair', cat: 'อื่นๆ' },
       { th: 'ยิ้มมองกล้อง', en: 'smiling at the camera', cat: 'ท่าทาง' },
       { th: 'แสงหน้าต่าง', en: 'soft window light', cat: 'แสง' },
       { th: 'ครึ่งตัว', en: 'half-body shot', cat: 'กล้อง' }
     ],
+    templates: [],
     shots: [{}],
     active: 0
   };
 
+  /* คลังพื้นฐานในตัว (ภาษาถ่ายภาพ) — คำของผู้ใช้ในคลังจะมาก่อนเสมอ */
+  const BUILTIN = [
+    ['เซ็กซี่ละมุน','soft sensual mood','อื่นๆ'],['เซ็กซี่','sensual','อื่นๆ'],
+    ['ผมสั้น','short hair','อื่นๆ'],['ผิวขาวใส','fair luminous skin','อื่นๆ'],['ผิวฉ่ำ','dewy skin with natural texture','อื่นๆ'],
+    ['นั่งเอนตัว','reclining pose','ท่าทาง'],['ยืนเอียงสะโพก','standing with weight shifted to one hip, contrapposto','ท่าทาง'],
+    ['นอนตะแคง','lying on her side','ท่าทาง'],['มองข้ามไหล่','looking back over her shoulder','ท่าทาง'],
+    ['ยืดตัวโค้งหลัง','arched back, elongated body line','ท่าทาง'],['กอดตัวเอง','arms wrapped around herself','ท่าทาง'],
+    ['มือแตะผม','one hand gently touching her hair','ท่าทาง'],['สายตาท้าทาย','confident direct gaze','ท่าทาง'],['สายตาเหม่อ','soft distant gaze','ท่าทาง'],
+    ['โชว์หลัง','bare back','ชุด'],['ไหล่เปลือย','bare shoulders','ชุด'],['ผ้าซีทรู','sheer fabric','ชุด'],['ผ้าซาติน','satin','ชุด'],['ผ้าลูกไม้','lace','ชุด'],
+    ['ชุดชั้นใน','lingerie','ชุด'],['เสื้อเชิ้ตโอเวอร์ไซส์','oversized white shirt, unbuttoned','ชุด'],['ผ้าขนหนู','wrapped in a white towel','ชุด'],
+    ['โป๊เปลือยแบบปิดบัง','implied nude, strategically covered by fabric and shadow','ชุด'],['ปิดด้วยผ้าห่ม','draped in a white bedsheet covering the body','ชุด'],
+    ['ปิดด้วยเงา','form partially concealed in deep shadow','ชุด'],['ปิดด้วยแขนและมือ','arms and hands naturally covering','ชุด'],
+    ['นู้ดศิลปะ','fine-art nude study, tasteful and sculptural','ชุด'],
+    ['ห้องนอน','bedroom with white linen bedding','ฉาก'],['ห้องน้ำโรงแรม','hotel bathroom','ฉาก'],['โรงแรมกลางคืน','hotel room at night','ฉาก'],
+    ['สตูดิโอพื้นเรียบ','plain seamless studio backdrop','ฉาก'],['ริมสระ','poolside','ฉาก'],['ม่านโปร่ง','sheer curtains','ฉาก'],['ริมหน้าต่าง','by a large window','ฉาก'],
+    ['แสงอบอุ่นยามเย็น','warm golden-hour light','แสง'],['แสงนุ่มจากข้าง','soft side light','แสง'],['เงาคมแบบนัวร์','hard directional noir light, deep shadows','แสง'],
+    ['แสงเทียน','warm candlelight','แสง'],['แสงนีออน','neon glow','แสง'],['ไฮคีย์','high-key lighting','แสง'],['โลว์คีย์','low-key lighting','แสง'],
+    ['ถ่ายเต็มตัว','full-body shot','กล้อง'],['สามส่วนสี่','three-quarter body shot','กล้อง'],['โคลสอัพ','close-up portrait','กล้อง'],
+    ['เลนส์85','85mm lens, shallow depth of field','กล้อง'],['ฟิล์ม','35mm film look, fine grain','กล้อง'],['มุมต่ำ','low angle','กล้อง'],['มุมสูง','high angle','กล้อง'],
+    ['ซบไหล่','resting head on the other\'s shoulder','ปฏิสัมพันธ์'],['จับมือ','holding hands','ปฏิสัมพันธ์'],['กอดจากด้านหลัง','embracing from behind','ปฏิสัมพันธ์'],
+    ['นั่งหันหน้าเข้าหากัน','sitting facing each other','ปฏิสัมพันธ์'],['ใกล้ชิดกัน','close together','ปฏิสัมพันธ์'],
+    ['ซ้ายขวา','person A on the left, person B on the right','ผังเฟรม'],['เฟรมกว้างเห็นทั้งคู่','wide frame showing both people fully','ผังเฟรม']
+  ].map(([th, en, cat]) => ({ th, en, cat }));
+
+  const BUILTIN_TPL = [
+    { name: 'เซ็กซี่ละมุนริมหน้าต่าง', mode: 'single', f: { main: 'เซ็กซี่ละมุน, นั่งเอนตัว, เสื้อเชิ้ตโอเวอร์ไซส์, ห้องนอน, แสงหน้าต่าง, สามส่วนสี่, ฟิล์ม' } },
+    { name: 'ซีทรูโทนอุ่น', mode: 'single', f: { main: 'ผ้าซีทรู, ชุดชั้นใน, ยืนเอียงสะโพก, สายตาท้าทาย, แสงอบอุ่นยามเย็น, ถ่ายเต็มตัว' } },
+    { name: 'โชว์หลังแสงเทียน', mode: 'single', f: { main: 'โชว์หลัง, มองข้ามไหล่, ผ้าซาติน, แสงเทียน, โรงแรมกลางคืน, ครึ่งตัว' } },
+    { name: 'โป๊เปลือยแบบปิดบังในผ้าห่ม', mode: 'single', f: { main: 'โป๊เปลือยแบบปิดบัง, ปิดด้วยผ้าห่ม, นอนตะแคง, มองข้ามไหล่, ห้องนอน, แสงนุ่มจากข้าง, ครึ่งตัว' } },
+    { name: 'นู้ดศิลปะ เงาคม', mode: 'single', f: { main: 'นู้ดศิลปะ, ยืดตัวโค้งหลัง, ปิดด้วยเงา, เงาคมแบบนัวร์, สตูดิโอพื้นเรียบ, ถ่ายเต็มตัว, ฟิล์ม' } },
+    { name: 'สองคนในห้องนอน', mode: 'multi', f: { A: 'ผมยาว, ผ้าซาติน, นั่งเอนตัว', B: 'ผมสั้น, เสื้อเชิ้ตโอเวอร์ไซส์, นั่งหันหน้าเข้าหากัน', inter: 'ซบไหล่, จับมือ', layout: 'ซ้ายขวา, เฟรมกว้างเห็นทั้งคู่', main: 'ห้องนอน, แสงหน้าต่าง, สามส่วนสี่' } }
+  ];
+
   let S;
-  try { S = Object.assign({}, DEFAULT, JSON.parse(localStorage.getItem(LS) || '{}')); } catch { S = structuredClone(DEFAULT); }
+  try { S = Object.assign({}, DEFAULT, JSON.parse(localStorage.getItem(LS) || '{}')); } catch { S = JSON.parse(JSON.stringify(DEFAULT)); }
+  if (!Array.isArray(S.shots) || !S.shots.length) S.shots = [{}];
+  if (S.active >= S.shots.length) S.active = 0;
   const save = () => { try { localStorage.setItem(LS, JSON.stringify(S)); } catch {} };
 
-  const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1600); };
+  const toast = m => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1800); };
   const hasThai = s => /[\u0E00-\u0E7F]/.test(s);
-  const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const cur = () => S.shots[S.active] || (S.shots[S.active] = {});
 
   /* ---------- tabs ---------- */
   document.querySelectorAll('nav button').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
   function showTab(id) {
     document.querySelectorAll('nav button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === id));
     document.querySelectorAll('section').forEach(s => s.classList.toggle('on', s.id === id));
-    if (id === 'lib') renderLib();
+    if (id === 'set') renderSet();
+    if (id === 'guide') renderExamples();
   }
 
   /* ---------- translation (free, no API key) ---------- */
@@ -177,12 +331,11 @@ button.btn:disabled{opacity:.5}
     finally { clearTimeout(to); }
   }
   async function google(q) {
-    const u = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=th&tl=en&dt=t&dt=at&dt=bd&q=' + encodeURIComponent(q);
-    const d = await fetchJSON(u);
+    const d = await fetchJSON('https://translate.googleapis.com/translate_a/single?client=gtx&sl=th&tl=en&dt=t&dt=at&dt=bd&q=' + encodeURIComponent(q));
     const main = (d[0] || []).map(x => x[0]).join('').trim();
     const alts = [];
     (d[1] || []).forEach(g => (g[1] || []).forEach(w => alts.push(w)));
-    (d[5] || []).forEach(x => ((x[2] || [])).forEach(a => alts.push(a[0])));
+    (d[5] || []).forEach(x => (x[2] || []).forEach(a => alts.push(a[0])));
     return { main, alts };
   }
   async function myMemory(q) {
@@ -193,8 +346,8 @@ button.btn:disabled{opacity:.5}
     return list;
   }
   async function candidates(q) {
-    const seen = new Map(); const out = [];
-    const add = s => { s = (s || '').trim(); if (!s || hasThai(s)) return; const k = s.toLowerCase(); if (!seen.has(k)) { seen.set(k, 1); out.push(s); } };
+    const seen = new Set(); const out = [];
+    const add = s => { s = (s || '').trim(); if (!s || hasThai(s)) return; const k = s.toLowerCase(); if (!seen.has(k)) { seen.add(k); out.push(s); } };
     const [g, m] = await Promise.allSettled([google(q), myMemory(q)]);
     if (g.status === 'fulfilled') { add(g.value.main); g.value.alts.forEach(add); }
     if (m.status === 'fulfilled') m.value.forEach(add);
@@ -211,103 +364,185 @@ button.btn:disabled{opacity:.5}
   }
 
   /* ---------- glossary-first tokenizer ---------- */
+  function allEntries() {
+    const mine = new Set(S.lib.map(e => e.th));
+    return S.lib.concat(BUILTIN.filter(e => !mine.has(e.th))).filter(e => e.th);
+  }
   function tokenize(seg) {
-    const entries = [...S.lib].sort((a, b) => b.th.length - a.th.length);
+    const entries = allEntries().sort((a, b) => b.th.length - a.th.length);
     const parts = []; let buf = '';
     const flush = () => { if (buf.trim()) parts.push({ t: buf.trim() }); buf = ''; };
     for (let i = 0; i < seg.length;) {
-      const hit = entries.find(e => e.th && seg.startsWith(e.th, i));
+      const hit = entries.find(e => seg.startsWith(e.th, i));
       if (hit) { flush(); parts.push({ t: hit.th, en: hit.en }); i += hit.th.length; }
       else { buf += seg[i]; i++; }
     }
     flush();
     return parts;
   }
-  async function convert(text) {
-    const segs = text.split(/[,，、\n]+/).map(s => s.trim()).filter(Boolean);
+  async function convert(text, offline) {
+    const segs = String(text || '').split(/[,，、\n]+/).map(s => s.trim()).filter(Boolean);
     const result = [];
     for (const seg of segs) {
       const chunks = [];
       for (const p of tokenize(seg)) {
         if (p.en) chunks.push({ th: p.t, en: p.en, src: 'lib' });
-        else if (hasThai(p.t)) { const en = await machine(p.t); chunks.push({ th: p.t, en: en || p.t, src: en ? 'mt' : 'fail' }); }
-        else chunks.push({ th: p.t, en: p.t, src: 'raw' });
+        else if (hasThai(p.t) && !offline) { const en = await machine(p.t); chunks.push({ th: p.t, en: en || p.t, src: en ? 'mt' : 'fail' }); }
+        else chunks.push({ th: p.t, en: p.t, src: hasThai(p.t) ? 'fail' : 'raw' });
       }
       result.push(chunks);
     }
     return result;
   }
+  async function seg(text, cat, mt, offline) {
+    const r = await convert(text, offline); const out = [];
+    r.forEach(ch => {
+      out.push(ch.map(x => x.en).join(' ').replace(/\s+/g, ' ').trim());
+      ch.forEach(x => { if ((x.src === 'mt' || x.src === 'fail') && mt) mt.set(x.th, { ...x, cat }); });
+    });
+    return out.filter(Boolean);
+  }
+  const cl = a => a.filter(Boolean).join(', ');
+  async function composeShot(shot, mt, offline) {
+    const M = await seg(shot._main, 'อื่นๆ', mt, offline);
+    const slots = [];
+    for (const c of CATS) slots.push(...await seg(shot[c], c, mt, offline));
+    const suffix = S.suffix.trim();
+    if (shot._mode === 'multi') {
+      const A = await seg(shot._A, 'อื่นๆ', mt, offline), B = await seg(shot._B, 'อื่นๆ', mt, offline);
+      const I = await seg(shot._inter, 'ปฏิสัมพันธ์', mt, offline), L = await seg(shot._layout, 'ผังเฟรม', mt, offline);
+      const parts = ['Two people in one frame', 'Person A: ' + cl([S.prefix.trim(), ...A]), 'Person B: ' + cl([S.prefixB.trim(), ...B])];
+      if (I.length) parts.push('Interaction: ' + cl(I));
+      if (L.length) parts.push('Layout: ' + cl(L));
+      const rest = cl([...M, ...slots, suffix]);
+      return parts.join('. ') + (rest ? '. ' + rest : '') + '.';
+    }
+    return cl([S.prefix.trim(), ...M, ...slots, suffix]).replace(/\s*\n\s*/g, ' ');
+  }
 
-  /* ---------- compose ---------- */
+  /* ---------- tour hooks ---------- */
+  let tour = null;
+  const ping = name => { if (tour && tour.wait === name) tourNext(); };
+
+  /* ---------- home: templates ---------- */
+  function renderTpls() {
+    const box = $('#tplBox'); box.innerHTML = '';
+    BUILTIN_TPL.concat((S.templates || []).map(t => ({ ...t, mine: true }))).forEach(t => {
+      const b = document.createElement('button');
+      b.className = 'chip' + (t.mine ? ' mine' : '');
+      b.textContent = (t.mine ? '⭐ ' : '') + t.name;
+      b.onclick = () => loadTpl(t);
+      box.appendChild(b);
+    });
+  }
+  function loadTpl(t) {
+    const s = S.shots[S.active] = {};
+    s._mode = t.mode || 'single';
+    const f = t.f || {};
+    s._main = f.main || ''; s._A = f.A || ''; s._B = f.B || ''; s._inter = f.inter || ''; s._layout = f.layout || '';
+    CATS.forEach(c => { if (f[c]) s[c] = f[c]; });
+    save(); renderShot();
+    toast('โหลดแล้ว แก้ข้อความได้ แล้วกดสร้าง');
+    ping('tpl');
+  }
+
+  /* ---------- home: current shot UI ---------- */
   function renderShotTabs() {
     const box = $('#shotTabs'); box.innerHTML = '';
     S.shots.forEach((_, i) => {
       const b = document.createElement('button');
       b.className = 'chip' + (i === S.active ? ' sel' : '');
       b.textContent = 'ช็อต ' + (i + 1);
-      b.onclick = () => { S.active = i; save(); renderShotTabs(); renderSlots(); };
+      b.onclick = () => { S.active = i; save(); renderShotTabs(); renderShot(); };
       box.appendChild(b);
     });
   }
-  function renderSlots() {
+  function renderShot() {
+    const s = cur(); const multi = s._mode === 'multi';
+    $('#modeSingle').classList.toggle('sel', !multi);
+    $('#modeMulti').classList.toggle('sel', multi);
+    $('#multiBox').hidden = !multi;
+    $('#reqLbl').textContent = multi ? 'ฉาก แสง กล้อง (ภาพรวมของทั้งภาพ)' : 'พิมพ์ภาษาไทยได้เลย คั่นแต่ละอย่างด้วยเครื่องหมาย ,';
+    $('#req').value = s._main || ''; $('#fA').value = s._A || ''; $('#fB').value = s._B || '';
+    $('#fI').value = s._inter || ''; $('#fL').value = s._layout || '';
     const box = $('#slots'); box.innerHTML = '';
-    const shot = S.shots[S.active] || (S.shots[S.active] = {});
     CATS.forEach(c => {
       const l = document.createElement('label'); l.textContent = c;
-      const t = document.createElement('textarea'); t.value = shot[c] || '';
-      t.oninput = () => { shot[c] = t.value; save(); };
+      const t = document.createElement('textarea'); t.value = s[c] || '';
+      t.oninput = () => { cur()[c] = t.value; save(); };
       box.append(l, t);
     });
   }
-  $('#prefix').value = S.prefix; $('#suffix').value = S.suffix;
-  $('#prefix').oninput = e => { S.prefix = e.target.value; save(); };
-  $('#suffix').oninput = e => { S.suffix = e.target.value; save(); };
-  $('#addShot').onclick = () => { S.shots.push({}); S.active = S.shots.length - 1; save(); renderShotTabs(); renderSlots(); };
+  [['#req', '_main'], ['#fA', '_A'], ['#fB', '_B'], ['#fI', '_inter'], ['#fL', '_layout']].forEach(([sel, key]) => {
+    $(sel).addEventListener('input', e => { cur()[key] = e.target.value; save(); });
+  });
+  $('#modeSingle').onclick = () => { cur()._mode = 'single'; save(); renderShot(); };
+  $('#modeMulti').onclick = () => { cur()._mode = 'multi'; save(); renderShot(); };
+  $('#addShot').onclick = () => { S.shots.push({}); S.active = S.shots.length - 1; save(); renderShotTabs(); renderShot(); };
   $('#delShot').onclick = () => {
-    if (S.shots.length === 1) { S.shots[0] = {}; } else { S.shots.splice(S.active, 1); S.active = Math.max(0, S.active - 1); }
-    save(); renderShotTabs(); renderSlots(); toast('ลบแล้ว');
+    if (S.shots.length === 1) S.shots[0] = {}; else { S.shots.splice(S.active, 1); S.active = Math.max(0, S.active - 1); }
+    save(); renderShotTabs(); renderShot(); toast('ลบแล้ว');
   };
+  $('#clearShot').onclick = () => { const m = cur()._mode; S.shots[S.active] = { _mode: m }; save(); renderShot(); };
 
+  /* ---------- home: generate ---------- */
   let lastText = '';
   $('#goBtn').onclick = async () => {
     const btn = $('#goBtn'); btn.disabled = true; $('#composeStatus').textContent = 'กำลังแปล…';
-    const prompts = []; const mtChunks = new Map();
+    const mt = new Map(); const prompts = [];
     try {
-      for (const shot of S.shots) {
-        const parts = [];
-        if (S.prefix.trim()) parts.push(S.prefix.trim());
-        for (const c of CATS) {
-          if (!(shot[c] || '').trim()) continue;
-          const segs = await convert(shot[c]);
-          segs.forEach(chunks => {
-            parts.push(chunks.map(x => x.en).join(' ').replace(/\s+/g, ' ').trim());
-            chunks.forEach(x => { if (x.src === 'mt' || x.src === 'fail') mtChunks.set(x.th, { ...x, cat: c }); });
-          });
-        }
-        if (S.suffix.trim()) parts.push(S.suffix.trim());
-        prompts.push(parts.filter(Boolean).join(', ').replace(/\s*\n\s*/g, ' '));
-      }
+      for (const shot of S.shots) prompts.push(await composeShot(shot, mt, false));
       lastText = prompts.join('\n----\n');
       $('#out').textContent = lastText;
       $('#resultCard').hidden = false;
       const cb = $('#chunkChips'); cb.innerHTML = '';
-      mtChunks.forEach(x => {
+      mt.forEach(x => {
         const b = document.createElement('button'); b.className = 'chip mt';
         b.textContent = x.th + ' → ' + x.en + '  💾';
-        b.onclick = () => { fillAdd(x.th, x.en, x.cat); showTab('add'); };
+        b.onclick = () => { fillAdd(x.th, x.en, x.cat); showTab('set'); };
         cb.appendChild(b);
       });
-      $('#composeStatus').textContent = mtChunks.size ? `มี ${mtChunks.size} คำที่แปลโดยเครื่อง ตรวจแล้วกดเก็บเข้าคลังได้` : 'ทุกคำมาจากคลัง';
-    } catch (e) { $('#composeStatus').textContent = 'แปลไม่สำเร็จ ลองใหม่อีกครั้ง'; }
+      $('#composeStatus').textContent = mt.size ? `มี ${mt.size} คำที่เครื่องแปลเอง ตรวจก่อนใช้` : 'ทุกคำมาจากคลัง';
+      if (!tour) $('#resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch { $('#composeStatus').textContent = 'แปลไม่สำเร็จ ลองใหม่อีกครั้ง'; }
     btn.disabled = false;
+    ping('go');
   };
   $('#copyBtn').onclick = async () => {
     try { await navigator.clipboard.writeText(lastText); toast('คัดลอกแล้ว'); }
     catch { const r = document.createRange(); r.selectNodeContents($('#out')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast('เลือกข้อความแล้ว กดคัดลอกเอง'); }
+    ping('copy');
+  };
+  $('#saveTpl').onclick = () => {
+    const name = (prompt('ตั้งชื่อแบบนี้ (เช่น ซีรีส์ห้องนอนโทนอุ่น)') || '').trim();
+    if (!name) return;
+    const s = cur(); const f = { main: s._main || '', A: s._A || '', B: s._B || '', inter: s._inter || '', layout: s._layout || '' };
+    CATS.forEach(c => { if (s[c]) f[c] = s[c]; });
+    S.templates.push({ name, mode: s._mode || 'single', f }); save(); renderTpls(); toast('เก็บเป็นแบบของฉันแล้ว ⭐');
   };
 
-  /* ---------- add word ---------- */
-  CATS.forEach(c => { const o = document.createElement('option'); o.value = o.textContent = c; $('#catIn').appendChild(o); });
+  /* ---------- settings (PIN lock) ---------- */
+  const unlocked = () => sessionStorage.getItem('pc.unlock') === '1';
+  function renderSet() {
+    const ok = unlocked();
+    $('#lockBox').hidden = ok; $('#setBody').hidden = !ok;
+    if (!ok) return;
+    $('#prefix').value = S.prefix; $('#prefixB').value = S.prefixB; $('#suffix').value = S.suffix;
+    renderLib(); renderMyTpls();
+  }
+  $('#pinBtn').onclick = tryPin;
+  $('#pinIn').addEventListener('keydown', e => { if (e.key === 'Enter') tryPin(); });
+  function tryPin() {
+    if ($('#pinIn').value === (S.pin || '1234')) { sessionStorage.setItem('pc.unlock', '1'); $('#pinIn').value = ''; $('#pinStatus').textContent = ''; renderSet(); }
+    else $('#pinStatus').textContent = 'รหัสไม่ถูกต้อง';
+  }
+  $('#lockNow').onclick = () => { sessionStorage.removeItem('pc.unlock'); renderSet(); };
+  $('#pinSave').onclick = () => { const v = $('#newPin').value.trim(); if (!v) { toast('ใส่รหัสใหม่ก่อน'); return; } S.pin = v; save(); $('#newPin').value = ''; toast('เปลี่ยนรหัสแล้ว'); };
+  $('#prefix').oninput = e => { S.prefix = e.target.value; save(); };
+  $('#prefixB').oninput = e => { S.prefixB = e.target.value; save(); };
+  $('#suffix').oninput = e => { S.suffix = e.target.value; save(); };
+
+  CAT_OPTS.forEach(c => { const o = document.createElement('option'); o.value = o.textContent = c; $('#catIn').appendChild(o); });
   function fillAdd(th, en, cat) {
     $('#thIn').value = th || ''; $('#enIn').value = en || ''; if (cat) $('#catIn').value = cat;
     $('#cands').innerHTML = ''; $('#addStatus').textContent = '';
@@ -334,23 +569,22 @@ button.btn:disabled{opacity:.5}
     if (!th || !en) { toast('ใส่ทั้งคำไทยและคำอังกฤษ'); return; }
     const i = S.lib.findIndex(e => e.th === th);
     if (i >= 0) S.lib[i] = { th, en, cat }; else S.lib.push({ th, en, cat });
-    save(); toast(i >= 0 ? 'อัปเดตแล้ว' : 'เก็บแล้ว'); fillAdd('', '', null);
+    save(); toast(i >= 0 ? 'อัปเดตแล้ว' : 'เก็บแล้ว'); fillAdd('', '', null); renderLib();
   };
 
-  /* ---------- library ---------- */
   function renderLib() {
     const q = $('#libSearch').value.trim().toLowerCase();
     const box = $('#libList'); box.innerHTML = '';
     const items = S.lib.filter(e => !q || e.th.toLowerCase().includes(q) || e.en.toLowerCase().includes(q));
-    if (!items.length) { box.innerHTML = '<p class="hint">ยังไม่มีคำ ไปแท็บ “เพิ่มคำ” เพื่อเริ่มสร้างคลัง</p>'; return; }
-    CATS.concat([...new Set(S.lib.map(e => e.cat))].filter(c => !CATS.includes(c))).forEach(c => {
+    if (!items.length) { box.innerHTML = '<p class="hint">ยังไม่มีคำในคลังของคุณ (คำพื้นฐานในตัวยังใช้ได้ตามปกติ)</p>'; return; }
+    CAT_OPTS.concat([...new Set(S.lib.map(e => e.cat))].filter(c => !CAT_OPTS.includes(c))).forEach(c => {
       const group = items.filter(e => e.cat === c); if (!group.length) return;
       const h = document.createElement('div'); h.className = 'cat-h'; h.textContent = c; box.appendChild(h);
       group.forEach(e => {
         const row = document.createElement('div'); row.className = 'lib-item';
         row.innerHTML = `<div class="t"><b>${esc(e.th)}</b><span>${esc(e.en)}</span></div>`;
         const ed = document.createElement('button'); ed.className = 'btn ghost'; ed.textContent = 'แก้';
-        ed.onclick = () => { fillAdd(e.th, e.en, e.cat); showTab('add'); };
+        ed.onclick = () => { fillAdd(e.th, e.en, e.cat); window.scrollTo({ top: 0, behavior: 'smooth' }); };
         const del = document.createElement('button'); del.className = 'btn warn'; del.textContent = 'ลบ';
         del.onclick = () => { if (confirm('ลบ “' + e.th + '” ?')) { S.lib = S.lib.filter(x => x !== e); save(); renderLib(); } };
         row.append(ed, del); box.appendChild(row);
@@ -358,8 +592,19 @@ button.btn:disabled{opacity:.5}
     });
   }
   $('#libSearch').oninput = renderLib;
+  function renderMyTpls() {
+    const box = $('#myTpls'); box.innerHTML = '';
+    if (!S.templates.length) { box.innerHTML = '<p class="hint">ยังไม่มี กดปุ่ม “⭐ เก็บชุดนี้เป็นแบบของฉัน” ใต้ผลลัพธ์ในหน้าแรก</p>'; return; }
+    S.templates.forEach((t, i) => {
+      const row = document.createElement('div'); row.className = 'lib-item';
+      row.innerHTML = `<div class="t"><b>${esc(t.name)}</b></div>`;
+      const del = document.createElement('button'); del.className = 'btn warn'; del.textContent = 'ลบ';
+      del.onclick = () => { if (confirm('ลบแบบ “' + t.name + '” ?')) { S.templates.splice(i, 1); save(); renderMyTpls(); renderTpls(); } };
+      row.appendChild(del); box.appendChild(row);
+    });
+  }
   $('#exportBtn').onclick = () => {
-    const blob = new Blob([JSON.stringify({ lib: S.lib, prefix: S.prefix, suffix: S.suffix }, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify({ lib: S.lib, templates: S.templates, prefix: S.prefix, prefixB: S.prefixB, suffix: S.suffix }, null, 2)], { type: 'application/json' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'glossary.json'; a.click(); URL.revokeObjectURL(a.href);
   };
   $('#importBtn').onclick = () => $('#importFile').click();
@@ -370,12 +615,69 @@ button.btn:disabled{opacity:.5}
       if (!Array.isArray(arr)) throw 0;
       let n = 0;
       arr.forEach(x => { if (x && x.th && x.en) { const i = S.lib.findIndex(y => y.th === x.th); const item = { th: String(x.th), en: String(x.en), cat: x.cat || 'อื่นๆ' }; if (i >= 0) S.lib[i] = item; else S.lib.push(item); n++; } });
-      save(); renderLib(); toast('นำเข้า ' + n + ' คำ');
+      if (!Array.isArray(d) && Array.isArray(d.templates)) d.templates.forEach(t => { if (t && t.name && !S.templates.some(x => x.name === t.name)) S.templates.push(t); });
+      save(); renderLib(); renderMyTpls(); renderTpls(); toast('นำเข้า ' + n + ' คำ');
     } catch { toast('ไฟล์ไม่ถูกต้อง'); }
     e.target.value = '';
   };
 
-  renderShotTabs(); renderSlots();
+  /* ---------- guide: live examples ---------- */
+  const EXAMPLES = [
+    { title: 'ตัวอย่าง 1 · ภาพคนเดียว พิมพ์เอง', tpl: { mode: 'single', f: { main: 'เซ็กซี่ละมุน, นั่งเอนตัว, ห้องนอน, แสงหน้าต่าง, สามส่วนสี่' } } },
+    { title: 'ตัวอย่าง 2 · ใช้แบบสำเร็จรูป (ปิดบังด้วยผ้าและเงา)', tpl: BUILTIN_TPL[3] },
+    { title: 'ตัวอย่าง 3 · สองคน', tpl: BUILTIN_TPL[5] }
+  ];
+  async function renderExamples() {
+    const box = $('#examples'); box.innerHTML = '';
+    for (const ex of EXAMPLES) {
+      const f = ex.tpl.f;
+      const shot = { _mode: ex.tpl.mode, _main: f.main || '', _A: f.A || '', _B: f.B || '', _inter: f.inter || '', _layout: f.layout || '' };
+      const en = await composeShot(shot, null, true);
+      const th = ex.tpl.mode === 'multi' ? `คนที่ 1: ${f.A}\nคนที่ 2: ${f.B}\nปฏิสัมพันธ์: ${f.inter}\nผังเฟรม: ${f.layout}\nภาพรวม: ${f.main}` : f.main;
+      const d = document.createElement('div'); d.className = 'ex';
+      d.innerHTML = `<div class="hint">${esc(ex.title)}</div><div class="th" style="white-space:pre-wrap">${esc(th)}</div><div class="en">${esc(en)}</div>`;
+      const b = document.createElement('button'); b.className = 'btn ghost'; b.style.marginTop = '8px'; b.textContent = 'ลองเลย';
+      b.onclick = () => { showTab('home'); loadTpl(ex.tpl); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+      d.appendChild(b); box.appendChild(d);
+    }
+  }
+
+  /* ---------- guided tour ---------- */
+  const TOUR = [
+    { sel: '#tplBox', text: 'ขั้น 1: กดแบบสำเร็จรูปอันไหนก็ได้ (ลองกดอันแรก)', wait: 'tpl' },
+    { sel: '#req', text: 'ข้อความไทยขึ้นมาในช่องแล้ว แก้ได้เลย หรือพิมพ์เองก็ได้ คั่นแต่ละอย่างด้วย ,', next: true },
+    { sel: '#goBtn', text: 'ขั้น 2: กดปุ่ม “สร้าง prompt”', wait: 'go' },
+    { sel: '#resultCard', text: 'ได้ prompt แล้ว! ตัวหนังสือสีเหลืองใต้ผลลัพธ์คือคำที่เครื่องแปลเอง ควรตรวจก่อนใช้', next: true },
+    { sel: '#copyBtn', text: 'ขั้น 3: กด “คัดลอกทั้งหมด” แล้วนำไปวางในเว็บเจนภาพ', wait: 'copy' },
+    { sel: 'nav [data-tab="set"]', text: 'อยากเพิ่มคำศัพท์เอง มาที่แท็บ “ตั้งค่า” (รหัสตั้งต้น 1234) เสร็จแล้ว เก่งมากครับ 🎉', next: true }
+  ];
+  let tourI = 0, hlEl = null;
+  function startTour() {
+    showTab('home'); $('#firstBanner').hidden = true; S.seenTour = true; save();
+    tourI = -1; tour = {}; tourNext();
+  }
+  function clearHl() { if (hlEl) hlEl.classList.remove('hl'); hlEl = null; }
+  function endTour() { clearHl(); tour = null; $('#coach').hidden = true; }
+  function tourNext() {
+    clearHl(); tourI++;
+    if (tourI >= TOUR.length) { endTour(); return; }
+    const st = TOUR[tourI]; tour = st;
+    const el = document.querySelector(st.sel);
+    $('#coachTxt').textContent = st.text;
+    $('#coachNext').hidden = !st.next;
+    $('#coachNext').textContent = tourI === TOUR.length - 1 ? 'จบ' : 'ถัดไป';
+    $('#coach').hidden = false;
+    if (el) { el.classList.add('hl'); hlEl = el; el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+  }
+  $('#coachNext').onclick = tourNext;
+  $('#coachSkip').onclick = endTour;
+  $('#tourBtn').onclick = startTour;
+  $('#bannerGo').onclick = startTour;
+  $('#bannerNo').onclick = () => { $('#firstBanner').hidden = true; S.seenTour = true; save(); };
+
+  /* ---------- init ---------- */
+  if (!S.seenTour) $('#firstBanner').hidden = false;
+  renderTpls(); renderShotTabs(); renderShot();
 })();
 </script>
 </body>
