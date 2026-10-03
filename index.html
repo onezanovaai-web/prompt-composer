@@ -105,7 +105,8 @@ ol.steps li{margin:6px 0}
       <div class="shot-tabs" id="shotTabs"></div>
       <div class="row">
         <button class="chip" id="modeSingle">คนเดียว</button>
-        <button class="chip" id="modeMulti">หลายคน</button>
+        <button class="chip" id="modeMulti">สองคน</button>
+        <button class="chip" id="modeGroup">ฉากร่วม / หมู่</button>
       </div>
 
       <div id="multiBox" hidden>
@@ -117,6 +118,23 @@ ol.steps li{margin:6px 0}
         <textarea id="fI" placeholder="เช่น ซบไหล่, จับมือ"></textarea>
         <label for="fL">ใครอยู่ตรงไหนในเฟรม</label>
         <textarea id="fL" placeholder="เช่น ซ้ายขวา, เฟรมกว้างเห็นทั้งคู่"></textarea>
+      </div>
+
+      <div id="groupBox" hidden>
+        <label>จำนวนคนในภาพ</label>
+        <div class="chips" id="cntBox"></div>
+        <div id="charList"></div>
+        <label>ท่า / การโต้ตอบ (กดเลือกได้หลายอัน)</label>
+        <div class="chips" id="actBox"></div>
+        <p class="hint">เพิ่มปุ่มท่าเองได้ที่ ตั้งค่า → เพิ่มปุ่มหลายรายการ</p>
+        <label for="gI">เพิ่มเติม ใครทำอะไรกับใคร (พิมพ์เองได้)</label>
+        <textarea id="gI"></textarea>
+        <label for="gL">ใครอยู่ตรงไหนในเฟรม</label>
+        <textarea id="gL" placeholder="เช่น เฟรมกว้างเห็นทุกคน"></textarea>
+        <label>ซีน (เลือก 1)</label>
+        <div class="chips" id="sceneBox"></div>
+        <label>สไตล์ภาพ</label>
+        <div class="chips" id="styleBox"></div>
       </div>
 
       <label for="req" id="reqLbl">พิมพ์ภาษาไทยได้เลย คั่นแต่ละอย่างด้วยเครื่องหมาย ,</label>
@@ -167,8 +185,8 @@ ol.steps li{margin:6px 0}
       <div id="examples"></div>
     </div>
     <div class="card">
-      <h2>โหมด “หลายคน” ต่างจากคนเดียวยังไง</h2>
-      <p class="hint" style="margin:0">ต้องบอกให้ชัดว่าแต่ละคนเป็นใคร ใส่อะไร ท่าไหน ทั้งคู่ทำอะไรกัน และใครอยู่ตรงไหนในเฟรม เขียนสั้นและตรงจะได้ผลดีกว่าเขียนยาว เพราะแขนขาที่ซ้อนกันเป็นจุดที่โมเดลภาพพลาดบ่อย</p>
+      <h2>โหมดสองคน และฉากร่วม/หมู่ ต่างจากคนเดียวยังไง</h2>
+      <p class="hint" style="margin:0">ต้องบอกให้ชัดว่าแต่ละคนเป็นใคร ใส่อะไร ท่าไหน ทั้งคู่ทำอะไรกัน และใครอยู่ตรงไหนในเฟรม เขียนสั้นและตรงจะได้ผลดีกว่าเขียนยาว เพราะแขนขาที่ซ้อนกันเป็นจุดที่โมเดลภาพพลาดบ่อย โหมดฉากร่วม/หมู่ให้เลือกจำนวนคน 2–6 กรอกรายคน แล้วกดปุ่มเลือกท่า ซีน และสไตล์ภาพ (ภาพถ่าย / ฟิล์มหนัง / POV) ระบบเรียงให้เองเป็นโครง Person 1, Person 2, … → Action → Layout → Setting → Style</p>
     </div>
     <div class="card">
       <h2>ข้อควรรู้</h2>
@@ -190,7 +208,7 @@ ol.steps li{margin:6px 0}
         <h2>ตัวละครประจำ / ส่วนคงที่</h2>
         <label for="prefix">คนที่ 1 (ใส่ทุกช็อต)</label>
         <input id="prefix" autocomplete="off">
-        <label for="prefixB">คนที่ 2 (ใช้ในโหมดหลายคน)</label>
+        <label for="prefixB">คนที่ 2 เป็นต้นไป (โหมดสองคน/ฉากร่วม)</label>
         <input id="prefixB" autocomplete="off">
         <label for="suffix">ส่วนท้ายคงที่ เช่น กล้อง/ฟิล์มประจำซีรีส์</label>
         <input id="suffix" autocomplete="off">
@@ -213,6 +231,14 @@ ol.steps li{margin:6px 0}
           <button class="btn" id="saveBtn">เก็บเข้าคลัง</button>
           <button class="btn ghost" id="clearBtn">ล้างช่อง</button>
         </div>
+      </div>
+
+      <div class="card">
+        <h2>เพิ่มปุ่มท่า / ปุ่มซีน หลายรายการ</h2>
+        <p class="hint" style="margin:0 0 6px">วางทีละบรรทัด รูปแบบ <b>ไทย=English</b> แล้วจะโผล่เป็นปุ่มในโหมดฉากร่วมทันที</p>
+        <select id="bulkCat"><option value="ท่าร่วม">ปุ่มท่า</option><option value="ซีน">ปุ่มซีน</option></select>
+        <textarea id="bulkIn" style="margin-top:8px" placeholder="ตัวอย่างรูปแบบ&#10;ซบไหล่=resting head on shoulder"></textarea>
+        <div class="row" style="margin-top:8px"><button class="btn" id="bulkBtn">เพิ่มทั้งหมด</button></div>
       </div>
 
       <div class="card">
@@ -251,7 +277,7 @@ ol.steps li{margin:6px 0}
   const $ = s => document.querySelector(s);
   const LS = 'promptComposer.v1';           // same key as v1: existing library is kept
   const CATS = ['ท่าทาง', 'ชุด', 'ฉาก', 'แสง', 'กล้อง', 'อื่นๆ'];
-  const CAT_OPTS = CATS.concat(['ปฏิสัมพันธ์', 'ผังเฟรม']);
+  const CAT_OPTS = CATS.concat(['ปฏิสัมพันธ์', 'ผังเฟรม', 'ท่าร่วม', 'ซีน']);
 
   const DEFAULT = {
     prefix: '24-year-old Thai woman',
@@ -291,8 +317,20 @@ ol.steps li{margin:6px 0}
     ['เลนส์85','85mm lens, shallow depth of field','กล้อง'],['ฟิล์ม','35mm film look, fine grain','กล้อง'],['มุมต่ำ','low angle','กล้อง'],['มุมสูง','high angle','กล้อง'],
     ['ซบไหล่','resting head on the other\'s shoulder','ปฏิสัมพันธ์'],['จับมือ','holding hands','ปฏิสัมพันธ์'],['กอดจากด้านหลัง','embracing from behind','ปฏิสัมพันธ์'],
     ['นั่งหันหน้าเข้าหากัน','sitting facing each other','ปฏิสัมพันธ์'],['ใกล้ชิดกัน','close together','ปฏิสัมพันธ์'],
-    ['ซ้ายขวา','person A on the left, person B on the right','ผังเฟรม'],['เฟรมกว้างเห็นทั้งคู่','wide frame showing both people fully','ผังเฟรม']
+    ['ซ้ายขวา','person A on the left, person B on the right','ผังเฟรม'],['เฟรมกว้างเห็นทั้งคู่','wide frame showing both people fully','ผังเฟรม'],['เฟรมกว้างเห็นทุกคน','wide frame showing everyone fully','ผังเฟรม']
   ].map(([th, en, cat]) => ({ th, en, cat }));
+
+  const SCENES = [
+    ['ห้องนอน','bedroom with white linen bedding'],['โรงแรมกลางคืน','hotel room at night'],['ห้องน้ำโรงแรม','hotel bathroom'],
+    ['ห้องอาบน้ำ','steamy shower room'],['โซฟาห้องนั่งเล่น','living room with a large sofa'],['ริมสระ','poolside'],
+    ['ออนเซ็น','private onsen bath'],['ห้องครัว','home kitchen'],['ระเบียงยามค่ำ','balcony at night with city lights'],['สตูดิโอพื้นเรียบ','plain seamless studio backdrop']
+  ];
+  SCENES.forEach(([th, en]) => { if (!BUILTIN.some(e => e.th === th)) BUILTIN.push({ th, en, cat: 'ฉาก' }); });
+  const STYLES = [
+    { k: 'photo', th: 'ภาพถ่าย', en: "realistic candid photograph, natural skin texture, shot on 35mm" },
+    { k: 'film', th: 'ฟิล์มหนัง', en: "cinematic film still, anamorphic lens, shallow depth of field, film grain" },
+    { k: 'pov', th: 'POV', en: "first-person point-of-view shot, camera at the viewer's eye level, viewer's hands visible in frame" }
+  ];
 
   const BUILTIN_TPL = [
     { name: 'เซ็กซี่ละมุนริมหน้าต่าง', mode: 'single', f: { main: 'เซ็กซี่ละมุน, นั่งเอนตัว, เสื้อเชิ้ตโอเวอร์ไซส์, ห้องนอน, แสงหน้าต่าง, สามส่วนสี่, ฟิล์ม' } },
@@ -300,7 +338,8 @@ ol.steps li{margin:6px 0}
     { name: 'โชว์หลังแสงเทียน', mode: 'single', f: { main: 'โชว์หลัง, มองข้ามไหล่, ผ้าซาติน, แสงเทียน, โรงแรมกลางคืน, ครึ่งตัว' } },
     { name: 'โป๊เปลือยแบบปิดบังในผ้าห่ม', mode: 'single', f: { main: 'โป๊เปลือยแบบปิดบัง, ปิดด้วยผ้าห่ม, นอนตะแคง, มองข้ามไหล่, ห้องนอน, แสงนุ่มจากข้าง, ครึ่งตัว' } },
     { name: 'นู้ดศิลปะ เงาคม', mode: 'single', f: { main: 'นู้ดศิลปะ, ยืดตัวโค้งหลัง, ปิดด้วยเงา, เงาคมแบบนัวร์, สตูดิโอพื้นเรียบ, ถ่ายเต็มตัว, ฟิล์ม' } },
-    { name: 'สองคนในห้องนอน', mode: 'multi', f: { A: 'ผมยาว, ผ้าซาติน, นั่งเอนตัว', B: 'ผมสั้น, เสื้อเชิ้ตโอเวอร์ไซส์, นั่งหันหน้าเข้าหากัน', inter: 'ซบไหล่, จับมือ', layout: 'ซ้ายขวา, เฟรมกว้างเห็นทั้งคู่', main: 'ห้องนอน, แสงหน้าต่าง, สามส่วนสี่' } }
+    { name: 'สองคนในห้องนอน', mode: 'multi', f: { A: 'ผมยาว, ผ้าซาติน, นั่งเอนตัว', B: 'ผมสั้น, เสื้อเชิ้ตโอเวอร์ไซส์, นั่งหันหน้าเข้าหากัน', inter: 'ซบไหล่, จับมือ', layout: 'ซ้ายขวา, เฟรมกว้างเห็นทั้งคู่', main: 'ห้องนอน, แสงหน้าต่าง, สามส่วนสี่' } },
+    { name: 'สามคนบนโซฟา (ฉากร่วม)', mode: 'group', f: { n: 3, chars: ['ผมยาว, ผ้าซาติน', 'ผมสั้น, เสื้อเชิ้ตโอเวอร์ไซส์', 'ผมยาว, ชุดชั้นใน'], acts: ['ใกล้ชิดกัน', 'ซบไหล่'], scene: 'โซฟาห้องนั่งเล่น', style: 'photo', layout: 'เฟรมกว้างเห็นทุกคน', main: 'แสงอบอุ่นยามเย็น, ถ่ายเต็มตัว' } }
   ];
 
   let S;
@@ -319,6 +358,7 @@ ol.steps li{margin:6px 0}
   function showTab(id) {
     document.querySelectorAll('nav button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === id));
     document.querySelectorAll('section').forEach(s => s.classList.toggle('on', s.id === id));
+    if (id === 'home') renderShot();
     if (id === 'set') renderSet();
     if (id === 'guide') renderExamples();
   }
@@ -408,6 +448,27 @@ ol.steps li{margin:6px 0}
     const slots = [];
     for (const c of CATS) slots.push(...await seg(shot[c], c, mt, offline));
     const suffix = S.suffix.trim();
+    if (shot._mode === 'group') {
+      const n = Math.max(2, Math.min(6, shot._n || 2));
+      const nm = ['', '', 'Two', 'Three', 'Four', 'Five', 'Six'][n];
+      const parts = [n >= 4 ? `Group scene of ${nm.toLowerCase()} people in one frame` : `${nm} people in one frame`];
+      for (let i = 0; i < n; i++) {
+        const d = await seg((shot._chars || [])[i], 'อื่นๆ', mt, offline);
+        parts.push(`Person ${i + 1}: ` + cl([(i === 0 ? S.prefix : S.prefixB).trim(), ...d]));
+      }
+      const acts = [];
+      for (const th of shot._acts || []) acts.push(...await seg(th, 'ท่าร่วม', mt, offline));
+      acts.push(...await seg(shot._inter, 'ปฏิสัมพันธ์', mt, offline));
+      if (acts.length) parts.push('Action: ' + cl(acts));
+      const L = await seg(shot._layout, 'ผังเฟรม', mt, offline);
+      if (L.length) parts.push('Layout: ' + cl(L));
+      const sc = shot._scene ? await seg(shot._scene, 'ฉาก', mt, offline) : [];
+      if (sc.length) parts.push('Setting: ' + cl(sc));
+      const st = STYLES.find(x => x.k === shot._style);
+      if (st) parts.push('Style: ' + st.en);
+      const rest = cl([...M, ...slots, suffix]);
+      return parts.join('. ') + (rest ? '. ' + rest : '') + '.';
+    }
     if (shot._mode === 'multi') {
       const A = await seg(shot._A, 'อื่นๆ', mt, offline), B = await seg(shot._B, 'อื่นๆ', mt, offline);
       const I = await seg(shot._inter, 'ปฏิสัมพันธ์', mt, offline), L = await seg(shot._layout, 'ผังเฟรม', mt, offline);
@@ -441,6 +502,7 @@ ol.steps li{margin:6px 0}
     const f = t.f || {};
     s._main = f.main || ''; s._A = f.A || ''; s._B = f.B || ''; s._inter = f.inter || ''; s._layout = f.layout || '';
     CATS.forEach(c => { if (f[c]) s[c] = f[c]; });
+    s._n = f.n; s._chars = f.chars ? [...f.chars] : []; s._acts = f.acts ? [...f.acts] : []; s._scene = f.scene || ''; s._style = f.style || '';
     save(); renderShot();
     toast('โหลดแล้ว แก้ข้อความได้ แล้วกดสร้าง');
     ping('tpl');
@@ -458,13 +520,17 @@ ol.steps li{margin:6px 0}
     });
   }
   function renderShot() {
-    const s = cur(); const multi = s._mode === 'multi';
-    $('#modeSingle').classList.toggle('sel', !multi);
+    const s = cur(); const multi = s._mode === 'multi', grp = s._mode === 'group';
+    $('#modeSingle').classList.toggle('sel', !multi && !grp);
     $('#modeMulti').classList.toggle('sel', multi);
+    $('#modeGroup').classList.toggle('sel', grp);
     $('#multiBox').hidden = !multi;
-    $('#reqLbl').textContent = multi ? 'ฉาก แสง กล้อง (ภาพรวมของทั้งภาพ)' : 'พิมพ์ภาษาไทยได้เลย คั่นแต่ละอย่างด้วยเครื่องหมาย ,';
+    $('#groupBox').hidden = !grp;
+    $('#reqLbl').textContent = multi ? 'ฉาก แสง กล้อง (ภาพรวมของทั้งภาพ)' : grp ? 'แสง กล้อง และรายละเอียดอื่นๆ (ไม่บังคับ)' : 'พิมพ์ภาษาไทยได้เลย คั่นแต่ละอย่างด้วยเครื่องหมาย ,';
     $('#req').value = s._main || ''; $('#fA').value = s._A || ''; $('#fB').value = s._B || '';
     $('#fI').value = s._inter || ''; $('#fL').value = s._layout || '';
+    $('#gI').value = s._inter || ''; $('#gL').value = s._layout || '';
+    if (grp) renderGroup();
     const box = $('#slots'); box.innerHTML = '';
     CATS.forEach(c => {
       const l = document.createElement('label'); l.textContent = c;
@@ -473,11 +539,35 @@ ol.steps li{margin:6px 0}
       box.append(l, t);
     });
   }
-  [['#req', '_main'], ['#fA', '_A'], ['#fB', '_B'], ['#fI', '_inter'], ['#fL', '_layout']].forEach(([sel, key]) => {
+  const uniq = a => [...new Set(a)];
+  const actBank = () => uniq(BUILTIN.filter(e => e.cat === 'ปฏิสัมพันธ์').map(e => e.th).concat(S.lib.filter(e => e.cat === 'ท่าร่วม' || e.cat === 'ปฏิสัมพันธ์').map(e => e.th)));
+  const sceneBank = () => uniq(SCENES.map(x => x[0]).concat(S.lib.filter(e => e.cat === 'ซีน').map(e => e.th)));
+  function chipRow(box, items, isSel, onTap) {
+    box.innerHTML = '';
+    items.forEach(it => { const b = document.createElement('button'); b.className = 'chip' + (isSel(it.v) ? ' sel' : ''); b.textContent = it.label; b.onclick = () => onTap(it.v); box.appendChild(b); });
+  }
+  function renderGroup() {
+    const s = cur(); const n = Math.max(2, Math.min(6, s._n || 2)); s._n = n;
+    chipRow($('#cntBox'), [2, 3, 4, 5, 6].map(v => ({ v, label: v + ' คน' })), v => v === n, v => { s._n = v; save(); renderGroup(); });
+    s._chars = s._chars || [];
+    const list = $('#charList'); list.innerHTML = '';
+    for (let i = 0; i < n; i++) {
+      const l = document.createElement('label'); l.textContent = 'คนที่ ' + (i + 1) + ' (ผม ชุด ท่าทางของคนนี้)';
+      const t = document.createElement('textarea'); t.value = s._chars[i] || '';
+      t.oninput = () => { s._chars[i] = t.value; save(); };
+      list.append(l, t);
+    }
+    s._acts = s._acts || [];
+    chipRow($('#actBox'), actBank().map(v => ({ v, label: v })), v => s._acts.includes(v), v => { const k = s._acts.indexOf(v); if (k >= 0) s._acts.splice(k, 1); else s._acts.push(v); save(); renderGroup(); });
+    chipRow($('#sceneBox'), sceneBank().map(v => ({ v, label: v })), v => s._scene === v, v => { s._scene = s._scene === v ? '' : v; save(); renderGroup(); });
+    chipRow($('#styleBox'), STYLES.map(x => ({ v: x.k, label: x.th })), v => s._style === v, v => { s._style = s._style === v ? '' : v; save(); renderGroup(); });
+  }
+  [['#req', '_main'], ['#fA', '_A'], ['#fB', '_B'], ['#fI', '_inter'], ['#fL', '_layout'], ['#gI', '_inter'], ['#gL', '_layout']].forEach(([sel, key]) => {
     $(sel).addEventListener('input', e => { cur()[key] = e.target.value; save(); });
   });
   $('#modeSingle').onclick = () => { cur()._mode = 'single'; save(); renderShot(); };
   $('#modeMulti').onclick = () => { cur()._mode = 'multi'; save(); renderShot(); };
+  $('#modeGroup').onclick = () => { cur()._mode = 'group'; save(); renderShot(); };
   $('#addShot').onclick = () => { S.shots.push({}); S.active = S.shots.length - 1; save(); renderShotTabs(); renderShot(); };
   $('#delShot').onclick = () => {
     if (S.shots.length === 1) S.shots[0] = {}; else { S.shots.splice(S.active, 1); S.active = Math.max(0, S.active - 1); }
@@ -516,7 +606,7 @@ ol.steps li{margin:6px 0}
   $('#saveTpl').onclick = () => {
     const name = (prompt('ตั้งชื่อแบบนี้ (เช่น ซีรีส์ห้องนอนโทนอุ่น)') || '').trim();
     if (!name) return;
-    const s = cur(); const f = { main: s._main || '', A: s._A || '', B: s._B || '', inter: s._inter || '', layout: s._layout || '' };
+    const s = cur(); const f = { main: s._main || '', A: s._A || '', B: s._B || '', inter: s._inter || '', layout: s._layout || '', n: s._n, chars: [...(s._chars || [])], acts: [...(s._acts || [])], scene: s._scene || '', style: s._style || '' };
     CATS.forEach(c => { if (s[c]) f[c] = s[c]; });
     S.templates.push({ name, mode: s._mode || 'single', f }); save(); renderTpls(); toast('เก็บเป็นแบบของฉันแล้ว ⭐');
   };
@@ -591,6 +681,17 @@ ol.steps li{margin:6px 0}
       });
     });
   }
+  $('#bulkBtn').onclick = () => {
+    const cat = $('#bulkCat').value; let n = 0;
+    $('#bulkIn').value.split('\n').forEach(line => {
+      const i = line.indexOf('='); if (i < 1) return;
+      const th = line.slice(0, i).trim(), en = line.slice(i + 1).trim(); if (!th || !en) return;
+      const k = S.lib.findIndex(e => e.th === th); const item = { th, en, cat };
+      if (k >= 0) S.lib[k] = item; else S.lib.push(item); n++;
+    });
+    if (n) { save(); renderLib(); $('#bulkIn').value = ''; }
+    toast(n ? 'เพิ่ม ' + n + ' รายการแล้ว' : 'รูปแบบ: ไทย=English ต่อบรรทัด');
+  };
   $('#libSearch').oninput = renderLib;
   function renderMyTpls() {
     const box = $('#myTpls'); box.innerHTML = '';
@@ -625,15 +726,16 @@ ol.steps li{margin:6px 0}
   const EXAMPLES = [
     { title: 'ตัวอย่าง 1 · ภาพคนเดียว พิมพ์เอง', tpl: { mode: 'single', f: { main: 'เซ็กซี่ละมุน, นั่งเอนตัว, ห้องนอน, แสงหน้าต่าง, สามส่วนสี่' } } },
     { title: 'ตัวอย่าง 2 · ใช้แบบสำเร็จรูป (ปิดบังด้วยผ้าและเงา)', tpl: BUILTIN_TPL[3] },
-    { title: 'ตัวอย่าง 3 · สองคน', tpl: BUILTIN_TPL[5] }
+    { title: 'ตัวอย่าง 3 · สองคน', tpl: BUILTIN_TPL[5] },
+    { title: 'ตัวอย่าง 4 · ฉากร่วมหลายคน (เลือกจำนวนคน ท่า ซีน สไตล์ด้วยปุ่ม)', tpl: BUILTIN_TPL[6] }
   ];
   async function renderExamples() {
     const box = $('#examples'); box.innerHTML = '';
     for (const ex of EXAMPLES) {
       const f = ex.tpl.f;
-      const shot = { _mode: ex.tpl.mode, _main: f.main || '', _A: f.A || '', _B: f.B || '', _inter: f.inter || '', _layout: f.layout || '' };
+      const shot = { _mode: ex.tpl.mode, _main: f.main || '', _A: f.A || '', _B: f.B || '', _inter: f.inter || '', _layout: f.layout || '', _n: f.n, _chars: f.chars, _acts: f.acts, _scene: f.scene, _style: f.style };
       const en = await composeShot(shot, null, true);
-      const th = ex.tpl.mode === 'multi' ? `คนที่ 1: ${f.A}\nคนที่ 2: ${f.B}\nปฏิสัมพันธ์: ${f.inter}\nผังเฟรม: ${f.layout}\nภาพรวม: ${f.main}` : f.main;
+      const th = ex.tpl.mode === 'multi' ? `คนที่ 1: ${f.A}\nคนที่ 2: ${f.B}\nปฏิสัมพันธ์: ${f.inter}\nผังเฟรม: ${f.layout}\nภาพรวม: ${f.main}` : ex.tpl.mode === 'group' ? `${f.n} คน: ${f.chars.join(' | ')}\nท่า: ${f.acts.join(', ')}\nซีน: ${f.scene}\nสไตล์: ${(STYLES.find(x => x.k === f.style) || {}).th || '-'}\nภาพรวม: ${f.main}` : f.main;
       const d = document.createElement('div'); d.className = 'ex';
       d.innerHTML = `<div class="hint">${esc(ex.title)}</div><div class="th" style="white-space:pre-wrap">${esc(th)}</div><div class="en">${esc(en)}</div>`;
       const b = document.createElement('button'); b.className = 'btn ghost'; b.style.marginTop = '8px'; b.textContent = 'ลองเลย';
