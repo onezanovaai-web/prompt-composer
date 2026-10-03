@@ -1,0 +1,8 @@
+{
+  "lib": [
+    { "th": "ผมยาว", "en": "long hair", "cat": "อื่นๆ" },
+    { "th": "ยิ้มมองกล้อง", "en": "smiling at the camera", "cat": "ท่าทาง" },
+    { "th": "แสงหน้าต่าง", "en": "soft window light", "cat": "แสง" },
+    { "th": "ครึ่งตัว", "en": "half-body shot", "cat": "กล้อง" }
+  ]
+}

@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Prompt Composer TH→EN</title>
+<style>
+:root{
+  --bg:#eef1f4; --panel:#ffffff; --ink:#1d2530; --mute:#5d6b7a; --line:#d5dbe2;
+  --accent:#0f6e8c; --accent-ink:#ffffff; --lib:#1f7a4d; --lib-bg:#e3f3ea;
+  --mt:#9a5b00; --mt-bg:#fbefd9; --danger:#b3261e;
+  --r:10px;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#12171d; --panel:#1b222a; --ink:#e6ebf0; --mute:#93a1b0; --line:#2c3743;
+  --accent:#4fb3d3; --accent-ink:#0b1217; --lib:#6fd09b; --lib-bg:#183327; --mt:#f0b35a; --mt-bg:#3a2b12; --danger:#ff8a80;}
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 "Noto Sans Thai","Sarabun",system-ui,-apple-system,"Segoe UI",sans-serif;
+  padding:env(safe-area-inset-top) 0 calc(env(safe-area-inset-bottom) + 24px)}
+.wrap{max-width:760px;margin:0 auto;padding:12px}
+h1{font-size:1.15rem;margin:8px 0 2px}
+.sub{color:var(--mute);font-size:.88rem;margin:0 0 12px}
+nav{display:flex;gap:6px;margin-bottom:12px;position:sticky;top:0;background:var(--bg);padding:6px 0;z-index:5}
+nav button{flex:1;padding:10px 6px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:var(--r);font:inherit;font-weight:600}
+nav button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+section{display:none}
+section.on{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px;margin-bottom:12px}
+label{display:block;font-size:.85rem;color:var(--mute);margin:8px 0 4px}
+input,textarea,select{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+textarea{min-height:48px;resize:vertical}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row>*{flex:0 0 auto}
+.row>.grow{flex:1 1 140px}
+button.btn{padding:10px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:600}
+button.btn.ghost{background:transparent;color:var(--accent)}
+button.btn.warn{background:transparent;color:var(--danger);border-color:var(--danger)}
+button.btn:disabled{opacity:.5}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:.92rem}
+.chip.sel{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.chip.lib{background:var(--lib-bg);color:var(--lib);border-color:var(--lib)}
+.chip.mt{background:var(--mt-bg);color:var(--mt);border-color:var(--mt)}
+.status{font-size:.85rem;color:var(--mute);margin-top:6px;min-height:1.2em}
+.out{white-space:pre-wrap;word-break:break-word;background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:10px;font:14px/1.5 ui-monospace,Menlo,Consolas,monospace;min-height:56px}
+.shot-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.lib-item{display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.lib-item:last-child{border-bottom:0}
+.lib-item .t{flex:1 1 auto;min-width:0}
+.lib-item .t b{font-weight:600}
+.lib-item .t span{color:var(--mute);display:block;font-size:.9rem;word-break:break-word}
+.lib-item button{padding:6px 10px;font-size:.85rem}
+.cat-h{font-size:.9rem;font-weight:700;margin:14px 0 2px}
+.hint{font-size:.82rem;color:var(--mute)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 18px);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:999px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Prompt Composer TH→EN</h1>
+  <p class="sub">พิมพ์ไทย → ใช้คำจากคลังก่อน → ที่เหลือแปลอัตโนมัติ → ได้ prompt บรรทัดเดียว</p>
+
+  <nav role="tablist">
+    <button role="tab" data-tab="compose" aria-selected="true">ประกอบ</button>
+    <button role="tab" data-tab="add" aria-selected="false">เพิ่มคำ</button>
+    <button role="tab" data-tab="lib" aria-selected="false">คลัง</button>
+  </nav>
+
+  <!-- COMPOSE -->
+  <section id="compose" class="on">
+    <div class="card">
+      <label for="prefix">ส่วนหัวคงที่ (ใส่ทุกช็อต)</label>
+      <input id="prefix" autocomplete="off">
+      <label for="suffix">ส่วนท้ายคงที่ เช่น กล้อง/ฟิล์มประจำซีรีส์</label>
+      <input id="suffix" autocomplete="off">
+    </div>
+    <div class="card">
+      <div class="shot-tabs" id="shotTabs"></div>
+      <div id="slots"></div>
+      <p class="hint">คั่นคำด้วย , หรือขึ้นบรรทัดใหม่ เช่น ผมยาว, ยิ้มมองกล้อง</p>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="goBtn">แปล + ประกอบ</button>
+        <button class="btn ghost" id="addShot">+ ช็อต</button>
+        <button class="btn warn" id="delShot">ลบช็อตนี้</button>
+      </div>
+      <div class="status" id="composeStatus"></div>
+    </div>
+    <div class="card" id="resultCard" hidden>
+      <div class="row"><b class="grow">ผลลัพธ์</b><button class="btn" id="copyBtn">คัดลอกทั้งหมด</button></div>
+      <div class="out" id="out" style="margin-top:8px"></div>
+      <p class="hint" style="margin-top:10px">เขียว = มาจากคลัง · เหลือง = แปลโดยเครื่อง (กดเพื่อเก็บเข้าคลัง)</p>
+      <div class="chips" id="chunkChips"></div>
+    </div>
+  </section>
+
+  <!-- ADD -->
+  <section id="add">
+    <div class="card">
+      <label for="thIn">คำไทย</label>
+      <div class="row">
+        <input id="thIn" class="grow" autocomplete="off" placeholder="พิมพ์คำหรือวลีภาษาไทย">
+        <button class="btn" id="searchBtn">หาคำอังกฤษ</button>
+      </div>
+      <div class="status" id="addStatus"></div>
+      <div class="chips" id="cands"></div>
+      <label for="enIn">คำอังกฤษที่จะเก็บ (กดตัวเลือกด้านบน หรือพิมพ์/แก้เองได้)</label>
+      <input id="enIn" autocomplete="off">
+      <label for="catIn">หมวด</label>
+      <select id="catIn"></select>
+      <div class="row" style="margin-top:12px">
+        <button class="btn" id="saveBtn">เก็บเข้าคลัง</button>
+        <button class="btn ghost" id="clearBtn">ล้างช่อง</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIBRARY -->
+  <section id="lib">
+    <div class="card">
+      <input id="libSearch" placeholder="ค้นหาในคลัง" autocomplete="off">
+      <div class="row" style="margin-top:8px">
+        <button class="btn ghost" id="exportBtn">ส่งออก JSON</button>
+        <button class="btn ghost" id="importBtn">นำเข้า JSON</button>
+        <input type="file" id="importFile" accept="application/json" hidden>
+      </div>
+      <div class="hint" style="margin-top:6px">ข้อมูลเก็บในเบราว์เซอร์เครื่องนี้เท่านั้น ส่งออกไว้สำรองหรือย้ายเครื่องได้</div>
+    </div>
+    <div class="card" id="libList"></div>
+  </section>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+  const LS = 'promptComposer.v1';
+  const CATS = ['ท่าทาง', 'ชุด', 'ฉาก', 'แสง', 'กล้อง', 'อื่นๆ'];
+  const DEFAULT = {
+    prefix: '24-year-old Thai woman',
+    suffix: '',
+    lib: [
+      { th: 'ผมยาว', en: 'long hair', cat: 'อื่นๆ' },
+      { th: 'ยิ้มมองกล้อง', en: 'smiling at the camera', cat: 'ท่าทาง' },
+      { th: 'แสงหน้าต่าง', en: 'soft window light', cat: 'แสง' },
+      { th: 'ครึ่งตัว', en: 'half-body shot', cat: 'กล้อง' }
+    ],
+    shots: [{}],
+    active: 0
+  };
+
+  let S;
+  try { S = Object.assign({}, DEFAULT, JSON.parse(localStorage.getItem(LS) || '{}')); } catch { S = structuredClone(DEFAULT); }
+  const save = () => { try { localStorage.setItem(LS, JSON.stringify(S)); } catch {} };
+
+  const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1600); };
+  const hasThai = s => /[\u0E00-\u0E7F]/.test(s);
+  const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  /* ---------- tabs ---------- */
+  document.querySelectorAll('nav button').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+  function showTab(id) {
+    document.querySelectorAll('nav button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === id));
+    document.querySelectorAll('section').forEach(s => s.classList.toggle('on', s.id === id));
+    if (id === 'lib') renderLib();
+  }
+
+  /* ---------- translation (free, no API key) ---------- */
+  const cache = new Map();
+  async function fetchJSON(url, ms = 8000) {
+    const c = new AbortController(); const to = setTimeout(() => c.abort(), ms);
+    try { const r = await fetch(url, { signal: c.signal }); if (!r.ok) throw new Error(r.status); return await r.json(); }
+    finally { clearTimeout(to); }
+  }
+  async function google(q) {
+    const u = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=th&tl=en&dt=t&dt=at&dt=bd&q=' + encodeURIComponent(q);
+    const d = await fetchJSON(u);
+    const main = (d[0] || []).map(x => x[0]).join('').trim();
+    const alts = [];
+    (d[1] || []).forEach(g => (g[1] || []).forEach(w => alts.push(w)));
+    (d[5] || []).forEach(x => ((x[2] || [])).forEach(a => alts.push(a[0])));
+    return { main, alts };
+  }
+  async function myMemory(q) {
+    const d = await fetchJSON('https://api.mymemory.translated.net/get?langpair=th|en&q=' + encodeURIComponent(q));
+    const list = [];
+    if (d.responseData && d.responseData.translatedText) list.push(d.responseData.translatedText);
+    (d.matches || []).forEach(m => m.translation && list.push(m.translation));
+    return list;
+  }
+  async function candidates(q) {
+    const seen = new Map(); const out = [];
+    const add = s => { s = (s || '').trim(); if (!s || hasThai(s)) return; const k = s.toLowerCase(); if (!seen.has(k)) { seen.set(k, 1); out.push(s); } };
+    const [g, m] = await Promise.allSettled([google(q), myMemory(q)]);
+    if (g.status === 'fulfilled') { add(g.value.main); g.value.alts.forEach(add); }
+    if (m.status === 'fulfilled') m.value.forEach(add);
+    if (g.status === 'rejected' && m.status === 'rejected') throw new Error('offline');
+    return out.slice(0, 12);
+  }
+  async function machine(q) {
+    if (cache.has(q)) return cache.get(q);
+    let res = '';
+    try { res = (await google(q)).main; } catch {}
+    if (!res) { try { res = (await myMemory(q))[0] || ''; } catch {} }
+    if (res) cache.set(q, res);
+    return res;
+  }
+
+  /* ---------- glossary-first tokenizer ---------- */
+  function tokenize(seg) {
+    const entries = [...S.lib].sort((a, b) => b.th.length - a.th.length);
+    const parts = []; let buf = '';
+    const flush = () => { if (buf.trim()) parts.push({ t: buf.trim() }); buf = ''; };
+    for (let i = 0; i < seg.length;) {
+      const hit = entries.find(e => e.th && seg.startsWith(e.th, i));
+      if (hit) { flush(); parts.push({ t: hit.th, en: hit.en }); i += hit.th.length; }
+      else { buf += seg[i]; i++; }
+    }
+    flush();
+    return parts;
+  }
+  async function convert(text) {
+    const segs = text.split(/[,，、\n]+/).map(s => s.trim()).filter(Boolean);
+    const result = [];
+    for (const seg of segs) {
+      const chunks = [];
+      for (const p of tokenize(seg)) {
+        if (p.en) chunks.push({ th: p.t, en: p.en, src: 'lib' });
+        else if (hasThai(p.t)) { const en = await machine(p.t); chunks.push({ th: p.t, en: en || p.t, src: en ? 'mt' : 'fail' }); }
+        else chunks.push({ th: p.t, en: p.t, src: 'raw' });
+      }
+      result.push(chunks);
+    }
+    return result;
+  }
+
+  /* ---------- compose ---------- */
+  function renderShotTabs() {
+    const box = $('#shotTabs'); box.innerHTML = '';
+    S.shots.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.className = 'chip' + (i === S.active ? ' sel' : '');
+      b.textContent = 'ช็อต ' + (i + 1);
+      b.onclick = () => { S.active = i; save(); renderShotTabs(); renderSlots(); };
+      box.appendChild(b);
+    });
+  }
+  function renderSlots() {
+    const box = $('#slots'); box.innerHTML = '';
+    const shot = S.shots[S.active] || (S.shots[S.active] = {});
+    CATS.forEach(c => {
+      const l = document.createElement('label'); l.textContent = c;
+      const t = document.createElement('textarea'); t.value = shot[c] || '';
+      t.oninput = () => { shot[c] = t.value; save(); };
+      box.append(l, t);
+    });
+  }
+  $('#prefix').value = S.prefix; $('#suffix').value = S.suffix;
+  $('#prefix').oninput = e => { S.prefix = e.target.value; save(); };
+  $('#suffix').oninput = e => { S.suffix = e.target.value; save(); };
+  $('#addShot').onclick = () => { S.shots.push({}); S.active = S.shots.length - 1; save(); renderShotTabs(); renderSlots(); };
+  $('#delShot').onclick = () => {
+    if (S.shots.length === 1) { S.shots[0] = {}; } else { S.shots.splice(S.active, 1); S.active = Math.max(0, S.active - 1); }
+    save(); renderShotTabs(); renderSlots(); toast('ลบแล้ว');
+  };
+
+  let lastText = '';
+  $('#goBtn').onclick = async () => {
+    const btn = $('#goBtn'); btn.disabled = true; $('#composeStatus').textContent = 'กำลังแปล…';
+    const prompts = []; const mtChunks = new Map();
+    try {
+      for (const shot of S.shots) {
+        const parts = [];
+        if (S.prefix.trim()) parts.push(S.prefix.trim());
+        for (const c of CATS) {
+          if (!(shot[c] || '').trim()) continue;
+          const segs = await convert(shot[c]);
+          segs.forEach(chunks => {
+            parts.push(chunks.map(x => x.en).join(' ').replace(/\s+/g, ' ').trim());
+            chunks.forEach(x => { if (x.src === 'mt' || x.src === 'fail') mtChunks.set(x.th, { ...x, cat: c }); });
+          });
+        }
+        if (S.suffix.trim()) parts.push(S.suffix.trim());
+        prompts.push(parts.filter(Boolean).join(', ').replace(/\s*\n\s*/g, ' '));
+      }
+      lastText = prompts.join('\n----\n');
+      $('#out').textContent = lastText;
+      $('#resultCard').hidden = false;
+      const cb = $('#chunkChips'); cb.innerHTML = '';
+      mtChunks.forEach(x => {
+        const b = document.createElement('button'); b.className = 'chip mt';
+        b.textContent = x.th + ' → ' + x.en + '  💾';
+        b.onclick = () => { fillAdd(x.th, x.en, x.cat); showTab('add'); };
+        cb.appendChild(b);
+      });
+      $('#composeStatus').textContent = mtChunks.size ? `มี ${mtChunks.size} คำที่แปลโดยเครื่อง ตรวจแล้วกดเก็บเข้าคลังได้` : 'ทุกคำมาจากคลัง';
+    } catch (e) { $('#composeStatus').textContent = 'แปลไม่สำเร็จ ลองใหม่อีกครั้ง'; }
+    btn.disabled = false;
+  };
+  $('#copyBtn').onclick = async () => {
+    try { await navigator.clipboard.writeText(lastText); toast('คัดลอกแล้ว'); }
+    catch { const r = document.createRange(); r.selectNodeContents($('#out')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast('เลือกข้อความแล้ว กดคัดลอกเอง'); }
+  };
+
+  /* ---------- add word ---------- */
+  CATS.forEach(c => { const o = document.createElement('option'); o.value = o.textContent = c; $('#catIn').appendChild(o); });
+  function fillAdd(th, en, cat) {
+    $('#thIn').value = th || ''; $('#enIn').value = en || ''; if (cat) $('#catIn').value = cat;
+    $('#cands').innerHTML = ''; $('#addStatus').textContent = '';
+  }
+  async function doSearch() {
+    const q = $('#thIn').value.trim(); if (!q) return;
+    const st = $('#addStatus'), box = $('#cands'); box.innerHTML = ''; st.textContent = 'กำลังค้นหา…';
+    try {
+      const list = await candidates(q);
+      st.textContent = list.length ? 'กดเลือกคำที่ต้องการ' : 'ไม่พบตัวเลือก พิมพ์อังกฤษเองได้';
+      list.forEach(w => {
+        const b = document.createElement('button'); b.className = 'chip'; b.textContent = w;
+        b.onclick = () => { $('#enIn').value = w; box.querySelectorAll('.chip').forEach(x => x.classList.toggle('sel', x === b)); };
+        box.appendChild(b);
+      });
+      if (list[0] && !$('#enIn').value) $('#enIn').value = list[0];
+    } catch { st.textContent = 'เชื่อมต่อตัวแปลไม่ได้ (ออฟไลน์?) พิมพ์อังกฤษเองได้'; }
+  }
+  $('#searchBtn').onclick = doSearch;
+  $('#thIn').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+  $('#clearBtn').onclick = () => fillAdd('', '', null);
+  $('#saveBtn').onclick = () => {
+    const th = $('#thIn').value.trim(), en = $('#enIn').value.trim(), cat = $('#catIn').value;
+    if (!th || !en) { toast('ใส่ทั้งคำไทยและคำอังกฤษ'); return; }
+    const i = S.lib.findIndex(e => e.th === th);
+    if (i >= 0) S.lib[i] = { th, en, cat }; else S.lib.push({ th, en, cat });
+    save(); toast(i >= 0 ? 'อัปเดตแล้ว' : 'เก็บแล้ว'); fillAdd('', '', null);
+  };
+
+  /* ---------- library ---------- */
+  function renderLib() {
+    const q = $('#libSearch').value.trim().toLowerCase();
+    const box = $('#libList'); box.innerHTML = '';
+    const items = S.lib.filter(e => !q || e.th.toLowerCase().includes(q) || e.en.toLowerCase().includes(q));
+    if (!items.length) { box.innerHTML = '<p class="hint">ยังไม่มีคำ ไปแท็บ “เพิ่มคำ” เพื่อเริ่มสร้างคลัง</p>'; return; }
+    CATS.concat([...new Set(S.lib.map(e => e.cat))].filter(c => !CATS.includes(c))).forEach(c => {
+      const group = items.filter(e => e.cat === c); if (!group.length) return;
+      const h = document.createElement('div'); h.className = 'cat-h'; h.textContent = c; box.appendChild(h);
+      group.forEach(e => {
+        const row = document.createElement('div'); row.className = 'lib-item';
+        row.innerHTML = `<div class="t"><b>${esc(e.th)}</b><span>${esc(e.en)}</span></div>`;
+        const ed = document.createElement('button'); ed.className = 'btn ghost'; ed.textContent = 'แก้';
+        ed.onclick = () => { fillAdd(e.th, e.en, e.cat); showTab('add'); };
+        const del = document.createElement('button'); del.className = 'btn warn'; del.textContent = 'ลบ';
+        del.onclick = () => { if (confirm('ลบ “' + e.th + '” ?')) { S.lib = S.lib.filter(x => x !== e); save(); renderLib(); } };
+        row.append(ed, del); box.appendChild(row);
+      });
+    });
+  }
+  $('#libSearch').oninput = renderLib;
+  $('#exportBtn').onclick = () => {
+    const blob = new Blob([JSON.stringify({ lib: S.lib, prefix: S.prefix, suffix: S.suffix }, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'glossary.json'; a.click(); URL.revokeObjectURL(a.href);
+  };
+  $('#importBtn').onclick = () => $('#importFile').click();
+  $('#importFile').onchange = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    try {
+      const d = JSON.parse(await f.text()); const arr = Array.isArray(d) ? d : d.lib;
+      if (!Array.isArray(arr)) throw 0;
+      let n = 0;
+      arr.forEach(x => { if (x && x.th && x.en) { const i = S.lib.findIndex(y => y.th === x.th); const item = { th: String(x.th), en: String(x.en), cat: x.cat || 'อื่นๆ' }; if (i >= 0) S.lib[i] = item; else S.lib.push(item); n++; } });
+      save(); renderLib(); toast('นำเข้า ' + n + ' คำ');
+    } catch { toast('ไฟล์ไม่ถูกต้อง'); }
+    e.target.value = '';
+  };
+
+  renderShotTabs(); renderSlots();
+})();
+</script>
+</body>
+</html>
