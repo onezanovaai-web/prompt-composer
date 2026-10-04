@@ -47,6 +47,8 @@ button.btn:disabled{opacity:.5}
 .chip.lib{background:var(--lib-bg);color:var(--lib);border-color:var(--lib)}
 .chip.mt{background:var(--mt-bg);color:var(--mt);border-color:var(--mt)}
 .chip.mine{border-style:dashed}
+.chip.sel{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+nav button{font-size:.9rem;padding:10px 2px}
 .status{font-size:.85rem;color:var(--mute);margin-top:6px;min-height:1.2em}
 .out{white-space:pre-wrap;word-break:break-word;background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:10px;font:14px/1.5 ui-monospace,Menlo,Consolas,monospace;min-height:56px}
 .shot-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
@@ -83,6 +85,7 @@ ol.steps li{margin:6px 0}
   <nav role="tablist">
     <button role="tab" data-tab="home" aria-selected="true">หน้าแรก</button>
     <button role="tab" data-tab="guide" aria-selected="false">วิธีใช้</button>
+    <button role="tab" data-tab="swap" aria-selected="false">สลับท่า</button>
     <button role="tab" data-tab="set" aria-selected="false">ตั้งค่า 🔒</button>
   </nav>
 
@@ -158,8 +161,9 @@ ol.steps li{margin:6px 0}
     <div class="card" id="resultCard" hidden>
       <div class="row"><b class="grow">ขั้น 4 · ผลลัพธ์</b><button class="btn" id="copyBtn">คัดลอกทั้งหมด</button></div>
       <div class="out" id="out" style="margin-top:8px"></div>
-      <p class="hint" style="margin-top:10px">เขียว = มาจากคลัง · เหลือง = เครื่องแปลเอง (ตรวจแล้วกดเก็บเข้าคลังได้)</p>
+      <p class="hint" style="margin-top:10px">เขียว = มาจากคลัง · เหลือง = เครื่องแปลเอง กดเพื่อดูคำอื่นแล้วเลือกคำที่ใช่ (เก็บเข้าคลังได้ ใช้รหัส)</p>
       <div class="chips" id="chunkChips"></div>
+      <div class="ex" id="pickBox" hidden></div>
       <div class="row" style="margin-top:10px"><button class="btn ghost" id="saveTpl">⭐ เก็บชุดนี้เป็นแบบของฉัน</button></div>
     </div>
   </section>
@@ -189,8 +193,38 @@ ol.steps li{margin:6px 0}
       <p class="hint" style="margin:0">ต้องบอกให้ชัดว่าแต่ละคนเป็นใคร ใส่อะไร ท่าไหน ทั้งคู่ทำอะไรกัน และใครอยู่ตรงไหนในเฟรม เขียนสั้นและตรงจะได้ผลดีกว่าเขียนยาว เพราะแขนขาที่ซ้อนกันเป็นจุดที่โมเดลภาพพลาดบ่อย โหมดฉากร่วม/หมู่ให้เลือกจำนวนคน 2–6 กรอกรายคน แล้วกดปุ่มเลือกท่า ซีน และสไตล์ภาพ (ภาพถ่าย / ฟิล์มหนัง / POV) ระบบเรียงให้เองเป็นโครง Person 1, Person 2, … → Action → Layout → Setting → Style</p>
     </div>
     <div class="card">
+      <h2>แท็บ “สลับท่า”</h2>
+      <p class="hint" style="margin:0">มี prompt อยู่แล้วแต่อยากเปลี่ยนแค่ท่า วางลงในแท็บสลับท่า พิมพ์ท่าใหม่เป็นไทย เลือกคำอังกฤษที่ชอบ กดใช้ ระบบเปลี่ยนเฉพาะส่วน Action / Interaction ที่เหลือไม่แตะ</p>
+    </div>
+    <div class="card">
       <h2>ข้อควรรู้</h2>
       <p class="hint" style="margin:0">คำแปลอัตโนมัติอาจเพี้ยนกับศัพท์เฉพาะ จึงมีคลังคำให้เติมเอง ส่วนตั้งค่าล็อกไว้ด้วยรหัส (ตั้งต้น 1234) ข้อมูลทั้งหมดเก็บในเบราว์เซอร์เครื่องนี้</p>
+    </div>
+  </section>
+
+  <!-- SWAP -->
+  <section id="swap">
+    <div class="card">
+      <h2>สลับท่า โดยไม่แตะส่วนอื่นของ prompt</h2>
+      <p class="hint" style="margin:0 0 6px">วาง prompt ที่ประกอบเสร็จแล้ว (หลายช็อตคั่นด้วย ----) ระบบเปลี่ยนเฉพาะหัวข้อ Action / Interaction ส่วนตัวละคร ชุด ซีน แสง กล้อง สไตล์คงเดิมทุกตัวอักษร</p>
+      <label for="swIn">prompt ต้นฉบับ</label>
+      <textarea id="swIn" style="min-height:120px"></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn ghost" id="swFromHome">ดึงผลลัพธ์ล่าสุดจากหน้าแรก</button></div>
+    </div>
+    <div class="card">
+      <h2>ท่าใหม่</h2>
+      <p class="hint" style="margin:0">พิมพ์ไทย → หาคำอังกฤษ → กดเลือกคำที่ต้องการ → กดใช้ ได้เลย ไม่ต้องกลับไปหน้าตั้งค่า</p>
+      <div id="swPick"></div>
+      <label>หรือกดเลือกจากท่าที่มีในคลัง</label>
+      <div class="chips" id="swBank"></div>
+      <label for="swFind">(ไม่บังคับ) ข้อความท่าเดิมที่จะแทนที่ ใช้เมื่อ prompt ไม่มีหัวข้อ Action:</label>
+      <input id="swFind" autocomplete="off">
+    </div>
+    <div class="card" id="swOutCard" hidden>
+      <div class="row"><b class="grow">ผลลัพธ์</b><button class="btn" id="swCopy">คัดลอก</button></div>
+      <div class="out" id="swOut" style="margin-top:8px"></div>
+      <div id="swDiff" class="hint" style="margin-top:8px"></div>
+      <div class="row" style="margin-top:8px"><button class="btn ghost" id="swChain">ใช้ผลลัพธ์นี้เป็นต้นฉบับต่อ</button></div>
     </div>
   </section>
 
@@ -359,6 +393,7 @@ ol.steps li{margin:6px 0}
     document.querySelectorAll('nav button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === id));
     document.querySelectorAll('section').forEach(s => s.classList.toggle('on', s.id === id));
     if (id === 'home') renderShot();
+    if (id === 'swap') renderSwap();
     if (id === 'set') renderSet();
     if (id === 'guide') renderExamples();
   }
@@ -584,12 +619,12 @@ ol.steps li{margin:6px 0}
       for (const shot of S.shots) prompts.push(await composeShot(shot, mt, false));
       lastText = prompts.join('\n----\n');
       $('#out').textContent = lastText;
-      $('#resultCard').hidden = false;
+      $('#resultCard').hidden = false; $('#pickBox').hidden = true;
       const cb = $('#chunkChips'); cb.innerHTML = '';
       mt.forEach(x => {
         const b = document.createElement('button'); b.className = 'chip mt';
-        b.textContent = x.th + ' → ' + x.en + '  💾';
-        b.onclick = () => { fillAdd(x.th, x.en, x.cat); showTab('set'); };
+        b.textContent = x.th + ' → ' + x.en + '  ✎';
+        b.onclick = () => openPicker(x, b);
         cb.appendChild(b);
       });
       $('#composeStatus').textContent = mt.size ? `มี ${mt.size} คำที่เครื่องแปลเอง ตรวจก่อนใช้` : 'ทุกคำมาจากคลัง';
@@ -610,6 +645,116 @@ ol.steps li{margin:6px 0}
     CATS.forEach(c => { if (s[c]) f[c] = s[c]; });
     S.templates.push({ name, mode: s._mode || 'single', f }); save(); renderTpls(); toast('เก็บเป็นแบบของฉันแล้ว ⭐');
   };
+
+  /* ---------- shared: save with PIN, candidate picker ---------- */
+  function saveToLib(th, en, cat) {
+    if (sessionStorage.getItem('pc.unlock') !== '1') {
+      const v = prompt('ใส่รหัสเพื่อเก็บเข้าคลัง');
+      if (v === null) return false;
+      if (v !== (S.pin || '1234')) { toast('รหัสไม่ถูกต้อง'); return false; }
+      sessionStorage.setItem('pc.unlock', '1');
+    }
+    const k = S.lib.findIndex(e => e.th === th); const item = { th, en, cat: cat || 'ท่าร่วม' };
+    if (k >= 0) S.lib[k] = item; else S.lib.push(item);
+    save(); toast('เก็บเข้าคลังแล้ว'); return true;
+  }
+  const libLookup = th => allEntries().find(e => e.th === th);
+  function mountPicker(box, o) {
+    box.innerHTML = `<label>คำไทย</label>
+      <div class="row"><input class="grow pk-th" autocomplete="off" placeholder="พิมพ์คำหรือวลีภาษาไทย"><button class="btn pk-find">หาคำอังกฤษ</button></div>
+      <div class="status pk-st"></div><div class="chips pk-c"></div>
+      <label>คำอังกฤษที่จะใช้ (กดเลือก หรือพิมพ์/แก้เองได้)</label><input class="pk-en" autocomplete="off">
+      <div class="row" style="margin-top:10px"><button class="btn pk-use"></button><button class="btn ghost pk-save">💾 เก็บเข้าคลัง</button></div>`;
+    const q = x => box.querySelector(x);
+    const th = q('.pk-th'), en = q('.pk-en'), cands = q('.pk-c'), st = q('.pk-st');
+    let lastQ = '';
+    q('.pk-use').textContent = o.useLabel; th.readOnly = !!o.lockTh;
+    const mark = () => cands.querySelectorAll('.chip').forEach(x => x.classList.toggle('sel', x.textContent === en.value));
+    const add = (w, cls) => { const b = document.createElement('button'); b.className = 'chip ' + (cls || ''); b.textContent = w; b.onclick = () => { en.value = w; mark(); }; cands.appendChild(b); };
+    async function find() {
+      const t = th.value.trim(); if (!t) return;
+      if (t !== lastQ) { en.value = ''; lastQ = t; }
+      cands.innerHTML = ''; st.textContent = 'กำลังค้นหา…';
+      const hit = libLookup(t);
+      if (hit) { add(hit.en, 'lib'); if (!en.value) en.value = hit.en; }
+      try {
+        const list = await candidates(t);
+        list.filter(w => !hit || w.toLowerCase() !== hit.en.toLowerCase()).forEach(w => add(w));
+        st.textContent = hit ? 'เขียว = คำจากคลัง · กดเลือกคำอื่นได้' : (list.length ? 'กดเลือกคำที่ต้องการ' : 'ไม่พบตัวเลือก พิมพ์อังกฤษเองได้');
+        if (!en.value && list[0]) en.value = list[0];
+      } catch { st.textContent = hit ? 'ใช้คำจากคลัง (ตัวแปลเชื่อมต่อไม่ได้)' : 'เชื่อมต่อตัวแปลไม่ได้ พิมพ์อังกฤษเองได้'; }
+      mark();
+    }
+    q('.pk-find').onclick = find;
+    th.addEventListener('keydown', e => { if (e.key === 'Enter') find(); });
+    en.addEventListener('input', mark);
+    q('.pk-use').onclick = () => { const v = en.value.trim(); if (!v) { toast('เลือกหรือพิมพ์คำอังกฤษก่อน'); return; } o.onUse(v, th.value.trim()); };
+    q('.pk-save').onclick = () => {
+      const t = th.value.trim(), v = en.value.trim(); if (!t || !v) { toast('ใส่ทั้งคำไทยและอังกฤษ'); return; }
+      saveToLib(t, v, typeof o.cat === 'function' ? o.cat() : o.cat);
+    };
+    return { set(t, e, auto) { th.value = t || ''; en.value = e || ''; lastQ = auto ? (t || '') : ''; cands.innerHTML = ''; st.textContent = ''; if (auto) find(); } };
+  }
+
+  /* home: pick another word for a machine-translated chunk */
+  let homePicker = null, pickCur = null, pickBtn = null;
+  function openPicker(x, b) {
+    const box = $('#pickBox'); box.hidden = false; pickCur = x; pickBtn = b;
+    if (!homePicker) homePicker = mountPicker(box, {
+      useLabel: 'ใช้คำนี้ในผลลัพธ์', lockTh: true, cat: () => (pickCur && pickCur.cat) || 'อื่นๆ',
+      onUse: en => {
+        if (!pickCur) return;
+        if (pickCur.en) lastText = lastText.split(pickCur.en).join(en);
+        $('#out').textContent = lastText;
+        pickCur.en = en; pickBtn.textContent = pickCur.th + ' → ' + en + '  ✎';
+        toast('เปลี่ยนคำในผลลัพธ์แล้ว');
+      }
+    });
+    homePicker.set(x.th, x.en, true);
+    box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  /* ---------- swap action ---------- */
+  function swapOne(shot, en, find) {
+    en = en.replace(/\.\s*$/, '');
+    if (find && shot.includes(find)) return { text: shot.split(find).join(en), before: find, how: 'find' };
+    const trailing = /\.\s*$/.test(shot);
+    const body = shot.replace(/\.\s*$/, '');
+    const parts = body.split(/\.\s+(?=(?:Person [A-Z0-9]+|Action|Interaction|Layout|Setting|Style):)/);
+    const i = parts.findIndex(p => /^(Action|Interaction):\s/.test(p));
+    if (i >= 0) {
+      const label = parts[i].match(/^(Action|Interaction)/)[1];
+      const before = parts[i].replace(/^[A-Za-z]+:\s*/, '');
+      parts[i] = label + ': ' + en;
+      return { text: parts.join('. ') + (trailing ? '.' : ''), before, how: 'replace' };
+    }
+    if (parts.length > 1) {
+      let j = parts.findIndex(p => /^(Layout|Setting|Style):/.test(p)); if (j < 0) j = parts.length;
+      parts.splice(j, 0, 'Action: ' + en);
+      return { text: parts.join('. ') + (trailing ? '.' : ''), before: '', how: 'insert' };
+    }
+    const k = body.indexOf(', ');
+    return { text: (k > 0 ? body.slice(0, k) + ', ' + en + body.slice(k) : body + ', ' + en) + (trailing ? '.' : ''), before: '', how: 'insert1' };
+  }
+  let swPicker = null, swLast = '';
+  function renderSwap() {
+    if (!swPicker) swPicker = mountPicker($('#swPick'), { useLabel: 'ใช้ท่านี้สลับเข้า prompt', cat: 'ท่าร่วม', onUse: doSwap });
+    chipRow($('#swBank'), actBank().map(v => ({ v, label: v })), () => false, v => { const e = libLookup(v); swPicker.set(v, e ? e.en : '', false); });
+  }
+  function doSwap(en) {
+    const src = $('#swIn').value.trim();
+    if (!src) { toast('วาง prompt ต้นฉบับก่อน'); return; }
+    const find = $('#swFind').value.trim();
+    const shots = src.split(/\s*-{3,}\s*/).filter(Boolean);
+    const res = shots.map(x => swapOne(x.trim(), en, find));
+    swLast = res.map(r => r.text).join('\n----\n');
+    $('#swOut').textContent = swLast; $('#swOutCard').hidden = false;
+    $('#swDiff').innerHTML = res.map((r, i) => `ช็อต ${i + 1}: ` + (r.how === 'replace' || r.how === 'find' ? `เปลี่ยน “${esc(r.before)}” → “${esc(en)}”` : `ไม่พบส่วนท่าเดิม เพิ่ม “${esc(en)}” ให้ใหม่`)).join('<br>');
+    $('#swOutCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  $('#swFromHome').onclick = () => { if (!lastText) { toast('ยังไม่มีผลลัพธ์ในหน้าแรก'); return; } $('#swIn').value = lastText; toast('ดึงมาแล้ว'); };
+  $('#swCopy').onclick = async () => { try { await navigator.clipboard.writeText(swLast); toast('คัดลอกแล้ว'); } catch { toast('คัดลอกไม่ได้ ลองเลือกข้อความเอง'); } };
+  $('#swChain').onclick = () => { $('#swIn').value = swLast; toast('ใช้เป็นต้นฉบับแล้ว'); };
 
   /* ---------- settings (PIN lock) ---------- */
   const unlocked = () => sessionStorage.getItem('pc.unlock') === '1';
